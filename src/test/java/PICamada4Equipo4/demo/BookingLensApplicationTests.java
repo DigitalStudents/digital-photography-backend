@@ -1,10 +1,10 @@
-package com.digital.photographybackend;
+package PICamada4Equipo4.demo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PhotographyBackendApplicationTests {
+class BookingLensApplicationTests {
 
 	@Test
 	void contextLoads() {
