@@ -28,6 +28,10 @@ public class ProductoController {
         return productoService.TraerTodos();
     }
 
+    @GetMapping("/random/{cantidad}")
+    public List<Producto> obtenerProductosAleatorios(@PathVariable int cantidad) {
+        return productoService.obtenerProductosAleatorios(cantidad);
+    }
     @PutMapping("/{id}")
     public void updateProducto(@PathVariable Long id, @RequestBody Producto camera) {
         camera.setId(id);

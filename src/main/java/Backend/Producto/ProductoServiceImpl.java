@@ -3,6 +3,7 @@ package Backend.Producto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +31,20 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     public void ModificarProducto(Producto producto) {
         productoRepository.save(producto);
+    }
+
+    @Override
+    public List<Producto> obtenerProductosAleatorios(int cantidad) {
+        List<Producto> allProducts = productoRepository.findAll();
+
+        // Shuffle the list of all products to make it random
+        Collections.shuffle(allProducts);
+
+        if (cantidad >= allProducts.size()) {
+            return allProducts;
+        } else {
+            return allProducts.subList(0, cantidad);
+        }
     }
 
     @Override

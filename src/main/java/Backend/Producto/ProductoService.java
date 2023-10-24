@@ -11,4 +11,6 @@ public interface ProductoService {
      void ModificarProducto (Producto producto);
      void EliminarProducto (Long id);
      void RestaurarProducto(Long id);
+
+     List<Producto> obtenerProductosAleatorios(int cantidad);
 }
