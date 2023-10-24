@@ -1,8 +1,8 @@
-package Backend.CamaraDeFotos;
+package Backend.Producto;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CamaraDeFotosRepository extends JpaRepository<CamaraDeFotos, Long> {
+public interface ProductoRepository extends JpaRepository<Producto, Long> {
 }
