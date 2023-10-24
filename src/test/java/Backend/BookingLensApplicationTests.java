@@ -1,10 +1,10 @@
-package com.digital.photographybackend;
+package Backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PhotographyBackendApplicationTests {
+class BookingLensApplicationTests {
 
 	@Test
 	void contextLoads() {
