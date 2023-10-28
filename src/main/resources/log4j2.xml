@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <!-- Define the console and file appenders -->
+    <Appenders>
+        <!-- Console appender, outputs logs to the console -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!-- Define the pattern layout for console logs -->
+            <PatternLayout pattern="%style{%d{ISO8601}}{black} %highlight{%highlight{%-5level}{FATAL=red, ERROR=red, WARN=yellow, INFO=red, DEBUG=blue, TRACE=white}} [%style{%t}{bright,blue}] %highlight{%style{%C{1.}}{bright,yellow}}: %msg%n%throwable"/>
+        </Console>
+
+        <!-- Rolling file appender, writes logs to a rolling file -->
+        <RollingFile name="RollingFile" fileName="./logs/system.log" filePattern="./logs/$${date:yyyy-MM}/spring-boot-logger-log4j2-%d{-dd-MMMM-yyyy}-%i.log.gz">
+            <PatternLayout pattern="%d %p %C{1.} [%t] %m%n"/>
+            <!-- Define log rolling policy based on file size -->
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="5" />
+        </RollingFile>
+    </Appenders>
+
+    <!-- Configure loggers -->
+    <Loggers>
+        <!-- Root logger, logs everything at INFO level -->
+        <Root level="info">
+            <!-- Attach the console appender to the root logger for all log levels -->
+            <AppenderRef ref="Console" level="trace"/>
+            <!-- Attach the file appender to the root logger for ERROR level and above -->
+            <AppenderRef ref="RollingFile" level="info"/>
+        </Root>
+
+        <!-- Specific logger for "com.mytest.project*" at TRACE level -->
+        <Logger name="com.mytest.project" level="trace">
+            <!-- Attach the file appender to this specific logger -->
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+    </Loggers>
+</Configuration>

@@ -1,13 +1,13 @@
-package com.digital.photographybackend;
+package Backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PhotographyBackendApplication {
+public class BookingLensApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PhotographyBackendApplication.class, args);
+		SpringApplication.run(BookingLensApplication.class, args);
 	}
 
 }
