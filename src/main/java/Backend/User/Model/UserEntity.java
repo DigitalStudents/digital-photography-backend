@@ -1,4 +1,4 @@
-package Backend.User;
+package Backend.User.Model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

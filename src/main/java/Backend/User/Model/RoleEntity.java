@@ -1,4 +1,4 @@
-package Backend.User;
+package Backend.User.Model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
