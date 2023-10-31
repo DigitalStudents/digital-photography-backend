@@ -3,11 +3,11 @@ package Backend.Producto;
 
 
 import Backend.Inventory.Inventory;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,8 +38,10 @@ public class Producto{
     private String descripcion;
     private double precio;
 
-    private static final String S3_BUCKET_NAME = "s3-bucket-nombre";
-    private static final AmazonS3 S3_CLIENT = AmazonS3ClientBuilder.defaultClient();
+    private static final String S3_BUCKET_NAME = "1023c04-grupo4";
+    private static final AmazonS3 S3_CLIENT = AmazonS3ClientBuilder.standard()
+            .withRegion(Regions.US_EAST_2)
+            .build();
 
     public void addImageToBucket(String imageUrl, byte[] imageBytes) {
         S3_CLIENT.putObject(S3_BUCKET_NAME, imageUrl, new ByteArrayInputStream(imageBytes), new ObjectMetadata());

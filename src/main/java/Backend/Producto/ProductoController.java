@@ -51,7 +51,7 @@ public class ProductoController {
         return productoService.TraerTodos();
     }
 
-    @GetMapping("/pagination")
+    @GetMapping("/paginacion")
     public Page<Producto> getPagination(@RequestParam(value = "page", defaultValue = "0") int page,
                                           @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);

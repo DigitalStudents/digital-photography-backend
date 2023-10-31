@@ -11,6 +11,7 @@ public interface ProductoService {
      void CrearProducto (Producto producto);
      Optional<Producto> BuscarProducto(Long id);
      List<Producto> TraerTodos();
+
      void ModificarProducto (Producto producto);
      void EliminarProducto (Long id);
      void RestaurarProducto(Long id);
