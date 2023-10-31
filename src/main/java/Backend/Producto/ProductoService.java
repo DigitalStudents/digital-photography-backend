@@ -16,6 +16,7 @@ public interface ProductoService {
      void RestaurarProducto(Long id);
      Page<Producto> Paginados(Pageable pageable);
 
+     void subirImagen(String imageUrl, byte[] imageBytes);
 
 
 }
