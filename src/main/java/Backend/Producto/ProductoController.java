@@ -1,6 +1,9 @@
 package Backend.Producto;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,10 +31,13 @@ public class ProductoController {
         return productoService.TraerTodos();
     }
 
-    @GetMapping("/random/{cantidad}")
-    public List<Producto> obtenerProductosAleatorios(@PathVariable int cantidad) {
-        return productoService.obtenerProductosAleatorios(cantidad);
+    @GetMapping("/pagination")
+    public Page<Producto> getPagination(@RequestParam(value = "page", defaultValue = "0") int page,
+                                          @RequestParam(value = "size", defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productoService.Paginados(pageable);
     }
+
     @PutMapping("/{id}")
     public void updateProducto(@PathVariable Long id, @RequestBody Producto camera) {
         camera.setId(id);

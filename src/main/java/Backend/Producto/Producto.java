@@ -30,7 +30,7 @@ public class Producto{
     private String descripcion;
     private double precio;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "product_imagenes", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "imagen_url")
     private List<String> imagenes;
