@@ -12,9 +12,12 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 
 @Data
@@ -43,23 +46,16 @@ public class Producto{
             .withRegion(Regions.US_EAST_2)
             .build();
 
-    public void addImageToBucket(String imageUrl, byte[] imageBytes) {
-        S3_CLIENT.putObject(S3_BUCKET_NAME, imageUrl, new ByteArrayInputStream(imageBytes), new ObjectMetadata());
+    public void uploadImageToS3(MultipartFile imageFile) throws IOException {
+        String uniqueImageName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(imageFile.getSize());
+
+        S3_CLIENT.putObject(S3_BUCKET_NAME, uniqueImageName, new ByteArrayInputStream(imageFile.getBytes()), metadata);
+
+        imagenes.add(uniqueImageName);
     }
 
-    public void removeImageFromBucket(String imageUrl) {
-        S3_CLIENT.deleteObject(S3_BUCKET_NAME, imageUrl);
-    }
-
-    public void addImage(String imageUrl, byte[] imageBytes) {
-        imagenes.add(imageUrl);
-        addImageToBucket(imageUrl, imageBytes);
-    }
-
-    public void removeImage(String imageUrl) {
-        imagenes.remove(imageUrl);
-        removeImageFromBucket(imageUrl);
-    }
 
     @OneToOne(mappedBy = "producto")
     @JsonIgnore

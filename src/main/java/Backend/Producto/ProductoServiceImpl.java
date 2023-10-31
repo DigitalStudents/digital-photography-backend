@@ -1,12 +1,15 @@
 package Backend.Producto;
 
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -15,7 +18,6 @@ import java.util.*;
 public class ProductoServiceImpl implements ProductoService {
 
     private List<Producto> shuffledProducts = null;
-    private Producto producto;
 
     @Autowired
     private ProductoRepository productoRepository;
@@ -24,6 +26,17 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     public void CrearProducto(Producto producto) {
         productoRepository.save(producto);
+    }
+
+    @Override
+    @Transactional
+    public void uploadImage(Long productId, MultipartFile imagen) throws IOException {
+        Optional<Producto> optionalProducto = productoRepository.findById(productId);
+        if (optionalProducto.isPresent()) {
+            Producto producto = optionalProducto.get();
+            producto.uploadImageToS3(imagen);
+            productoRepository.save(producto);
+        }
     }
 
     @Override
@@ -57,10 +70,7 @@ public class ProductoServiceImpl implements ProductoService {
         return new PageImpl<>(productsOnPage, pageable, shuffledProducts.size());
     }
 
-    @Override
-    public void subirImagen(String imageUrl, byte[] imageBytes) {
-        producto.addImageToBucket(imageUrl, imageBytes);
-    }
+
 
     @Override
     public void ModificarProducto(Producto producto) {
