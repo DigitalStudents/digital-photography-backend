@@ -46,9 +46,14 @@ public class ProductoController {
         return productoService.Paginados(pageable);
     }
 
-    @GetMapping("/buscador")
-    public List<Producto> buscarProductos(@RequestParam("nombre") String searchTerm) {
-        return productoService.BuscarPorNombre(searchTerm);
+    @GetMapping("/search")
+    public Page<Producto> searchProductos(
+            @RequestParam("term") String searchTerm,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productoService.BuscarPorNombre(searchTerm, pageable);
     }
 
     @PutMapping("/{id}")

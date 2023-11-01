@@ -71,8 +71,8 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public List<Producto> BuscarPorNombre(String searchTerm) {
-        return productoRepository.findByNombreContainingIgnoreCase(searchTerm);
+    public Page<Producto> BuscarPorNombre(String searchTerm, Pageable pageable) {
+        return productoRepository.findByNombreContainingIgnoreCase(searchTerm, pageable);
     }
 
 

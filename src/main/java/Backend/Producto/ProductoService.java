@@ -20,6 +20,6 @@ public interface ProductoService {
      void RestaurarProducto(Long id);
      Page<Producto> Paginados(Pageable pageable);
 
-     List<Producto> BuscarPorNombre(String searchTerm);
+     Page<Producto> BuscarPorNombre(String searchTerm, Pageable pageable);
 
 }
