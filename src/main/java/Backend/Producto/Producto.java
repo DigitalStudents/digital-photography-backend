@@ -41,7 +41,7 @@ public class Producto{
     private String descripcion;
     private double precio;
 
-    private static final String S3_BUCKET_NAME = "1023c04-grupo4";
+    private static final String S3_BUCKET_NAME = "i-0eed86f2cd921e232";
     private static final AmazonS3 S3_CLIENT = AmazonS3ClientBuilder.standard()
             .withRegion(Regions.US_EAST_2)
             .build();

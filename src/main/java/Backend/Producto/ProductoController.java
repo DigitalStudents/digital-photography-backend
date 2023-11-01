@@ -46,6 +46,11 @@ public class ProductoController {
         return productoService.Paginados(pageable);
     }
 
+    @GetMapping("/buscador")
+    public List<Producto> buscarProductos(@RequestParam("nombre") String searchTerm) {
+        return productoService.BuscarPorNombre(searchTerm);
+    }
+
     @PutMapping("/{id}")
     public void updateProducto(@PathVariable Long id, @RequestBody Producto camera) {
         camera.setId(id);

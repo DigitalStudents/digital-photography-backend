@@ -70,6 +70,10 @@ public class ProductoServiceImpl implements ProductoService {
         return new PageImpl<>(productsOnPage, pageable, shuffledProducts.size());
     }
 
+    @Override
+    public List<Producto> BuscarPorNombre(String searchTerm) {
+        return productoRepository.findByNombreContainingIgnoreCase(searchTerm);
+    }
 
 
     @Override
