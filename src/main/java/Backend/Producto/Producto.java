@@ -3,6 +3,7 @@ package Backend.Producto;
 
 
 import Backend.Inventory.Inventory;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -41,8 +42,9 @@ public class Producto{
     private String descripcion;
     private double precio;
 
-    private static final String S3_BUCKET_NAME ="i-0eed86f2cd921e232";
+    private static final String S3_BUCKET_NAME ="1023c04-grupo1";
     private static final AmazonS3 S3_CLIENT = AmazonS3ClientBuilder.standard()
+            .withCredentials(new DefaultAWSCredentialsProviderChain())
             .withRegion(Regions.US_EAST_2)
             .build();
 

@@ -1,5 +1,6 @@
 package Backend.Producto;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,50 +19,51 @@ public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
-
+    @Operation(summary = "Crea un Producto")
     @PostMapping
     public void createProducto(@RequestBody Producto camera) {
         productoService.CrearProducto(camera);
     }
 
-    @PostMapping("/{id}/upload-image")
+    @Operation(summary = "Sube una imagen al bucket s3 (USAR POSTMAN)")
+    @PostMapping("/{id}/subir-imagen")
     public void uploadImage(@PathVariable Long id, @RequestParam("image") MultipartFile image) throws IOException {
         productoService.uploadImage(id, image);
     }
-
+    @Operation(summary = "Trae un producto por su ID")
     @GetMapping("/{id}")
         public Optional<Producto> getProducto(@PathVariable Long id) {
         return productoService.BuscarProducto(id);
     }
-
+    @Operation(summary = "Trae todos los productos")
     @GetMapping
     public List<Producto> getAllProductos() {
         return productoService.TraerTodos();
     }
-
+    @Operation(summary = "Trae todos los productos en orden aleatorio y los pagina")
     @GetMapping("/paginacion")
-    public Page<Producto> getPagination(@RequestParam(value = "page", defaultValue = "0") int page,
-                                          @RequestParam(value = "size", defaultValue = "10") int size) {
+    public Page<Producto> getPagination(@RequestParam(value = "pagina", defaultValue = "0") int page,
+                                          @RequestParam(value = "cantidad", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return productoService.Paginados(pageable);
     }
-
-    @GetMapping("/search")
+    @Operation(summary = "Buscador de productos (paginado también)")
+    @GetMapping("/buscador")
     public Page<Producto> searchProductos(
-            @RequestParam("term") String searchTerm,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size
+            @RequestParam("término") String searchTerm,
+            @RequestParam(value = "página", defaultValue = "0") int page,
+            @RequestParam(value = "cantidad", defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
         return productoService.BuscarPorNombre(searchTerm, pageable);
     }
-
+    @Operation(summary = "Modifica un producto")
     @PutMapping("/{id}")
     public void updateProducto(@PathVariable Long id, @RequestBody Producto camera) {
         camera.setId(id);
         productoService.ModificarProducto(camera);
     }
-
+    @Operation(summary = "Borra un producto")
     @DeleteMapping("/{id}")
     public void deleteProducto(@PathVariable Long id) {
         productoService.EliminarProducto(id);
