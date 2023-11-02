@@ -21,8 +21,8 @@ public class ProductoController {
     private ProductoService productoService;
     @Operation(summary = "Crea un Producto")
     @PostMapping
-    public void createProducto(@RequestBody Producto camera) {
-        productoService.CrearProducto(camera);
+    public void createProducto(@RequestBody Producto producto) {
+        productoService.CrearProducto(producto);
     }
 
     @Operation(summary = "Sube una imagen al bucket s3 (USAR POSTMAN)")
@@ -30,16 +30,19 @@ public class ProductoController {
     public void uploadImage(@PathVariable Long id, @RequestParam("image") MultipartFile image) throws IOException {
         productoService.uploadImage(id, image);
     }
+
     @Operation(summary = "Trae un producto por su ID")
     @GetMapping("/{id}")
         public Optional<Producto> getProducto(@PathVariable Long id) {
         return productoService.BuscarProducto(id);
     }
+
     @Operation(summary = "Trae todos los productos")
     @GetMapping
     public List<Producto> getAllProductos() {
         return productoService.TraerTodos();
     }
+
     @Operation(summary = "Trae todos los productos en orden aleatorio y los pagina")
     @GetMapping("/paginacion")
     public Page<Producto> getPagination(@RequestParam(value = "pagina", defaultValue = "0") int page,
@@ -47,6 +50,7 @@ public class ProductoController {
         Pageable pageable = PageRequest.of(page, size);
         return productoService.Paginados(pageable);
     }
+
     @Operation(summary = "Buscador de productos (paginado también)")
     @GetMapping("/buscador")
     public Page<Producto> searchProductos(
@@ -57,12 +61,14 @@ public class ProductoController {
         Pageable pageable = PageRequest.of(page, size);
         return productoService.BuscarPorNombre(searchTerm, pageable);
     }
+
     @Operation(summary = "Modifica un producto")
     @PutMapping("/{id}")
-    public void updateProducto(@PathVariable Long id, @RequestBody Producto camera) {
-        camera.setId(id);
-        productoService.ModificarProducto(camera);
+    public void updateProducto(@PathVariable Long id, @RequestBody Producto producto) {
+        producto.setId(id);
+        productoService.ModificarProducto(producto);
     }
+
     @Operation(summary = "Borra un producto")
     @DeleteMapping("/{id}")
     public void deleteProducto(@PathVariable Long id) {

@@ -41,6 +41,10 @@ public class Producto{
     private String nombre;
     private String descripcion;
     private double precio;
+    @OneToOne(mappedBy = "producto")
+    @JsonIgnore
+    private Inventory inventory;
+    private boolean deleted = false;
 
     private static final String S3_BUCKET_NAME ="1023c04-grupo1";
     private static final AmazonS3 S3_CLIENT = AmazonS3ClientBuilder.standard()
@@ -57,12 +61,6 @@ public class Producto{
 
         imagenes.add(uniqueImageName);
     }
-
-
-    @OneToOne(mappedBy = "producto")
-    @JsonIgnore
-    private Inventory inventory;
-    private boolean deleted = false;
 
     public void softDelete() {
         this.deleted = true;
