@@ -1,7 +1,7 @@
 package Backend.Producto;
 
 
-
+import Backend.Caracteristicas.Caracteristica;
 import Backend.Inventory.Inventory;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Regions;
@@ -45,6 +45,14 @@ public class Producto{
     @JsonIgnore
     private Inventory inventory;
     private boolean deleted = false;
+
+    @ManyToMany
+    @JoinTable(
+            name = "producto_caracteristica",
+            joinColumns = @JoinColumn(name = "producto_id"),
+            inverseJoinColumns = @JoinColumn(name = "caracteristica_id")
+    )
+    private List<Caracteristica> caracteristicas;
 
     private static final String S3_BUCKET_NAME ="1023c04-grupo1";
     private static final AmazonS3 S3_CLIENT = AmazonS3ClientBuilder.standard()

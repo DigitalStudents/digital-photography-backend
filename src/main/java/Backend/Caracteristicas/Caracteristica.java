@@ -1,12 +1,13 @@
 package Backend.Caracteristicas;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import Backend.Producto.Producto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -19,5 +20,8 @@ public class Caracteristica {
     private Long id;
     private String nombre;
     private String descripcion;
+    @ManyToMany(mappedBy = "caracteristicas")
+    @JsonIgnore
+    private List<Producto> productos;
 
 }

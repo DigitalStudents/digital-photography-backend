@@ -69,6 +69,15 @@ public class ProductoController {
         productoService.ModificarProducto(producto);
     }
 
+    @Operation(summary = "Asocia características a un producto")
+    @PostMapping("/{productoId}/asociar-caracteristicas")
+    public void addCaracteristicasToProducto(
+            @PathVariable Long productoId,
+            @RequestBody List<Long> caracteristicaIds
+    ) {
+        productoService.agregarCaracteristicasAProducto(productoId, caracteristicaIds);
+    }
+
     @Operation(summary = "Borra un producto")
     @DeleteMapping("/{id}")
     public void deleteProducto(@PathVariable Long id) {

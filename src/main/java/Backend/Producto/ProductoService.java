@@ -22,4 +22,6 @@ public interface ProductoService {
 
      Page<Producto> BuscarPorNombre(String searchTerm, Pageable pageable);
 
+     void agregarCaracteristicasAProducto(Long productoId, List<Long> caracteristicaIds);
+
 }
