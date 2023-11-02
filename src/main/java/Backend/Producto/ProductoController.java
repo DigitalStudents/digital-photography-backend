@@ -21,8 +21,13 @@ public class ProductoController {
     private ProductoService productoService;
     @Operation(summary = "Crea un Producto")
     @PostMapping
-    public void createProducto(@RequestBody Producto producto) {
+    public void createProducto(
+            @RequestBody Producto producto,
+            @RequestParam("caracteristicaIds") List<Long> caracteristicaIds
+    ) {
         productoService.CrearProducto(producto);
+
+        productoService.agregarCaracteristicasAProducto(producto.getId(), caracteristicaIds);
     }
 
     @Operation(summary = "Sube una imagen al bucket s3 (USAR POSTMAN)")

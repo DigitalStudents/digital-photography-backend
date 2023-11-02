@@ -33,19 +33,13 @@ public class Producto{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String categoria;
+    private String nombre;
+    private double precio;
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "product_imagenes", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "imagen_url")
     private List<String> imagenes;
     @Column(unique = true)
-    private String nombre;
-    private String descripcion;
-    private double precio;
-    @OneToOne(mappedBy = "producto")
-    @JsonIgnore
-    private Inventory inventory;
-    private boolean deleted = false;
-
     @ManyToMany
     @JoinTable(
             name = "producto_caracteristica",
@@ -54,7 +48,13 @@ public class Producto{
     )
     private List<Caracteristica> caracteristicas;
 
-    private static final String S3_BUCKET_NAME ="1023c04-grupo1";
+    @OneToOne(mappedBy = "producto")
+    @JsonIgnore
+    private Inventory inventory;
+    private String descripcion;
+    private boolean deleted = false;
+
+    private static final String S3_BUCKET_NAME ="1023c04-grupo4";
     private static final AmazonS3 S3_CLIENT = AmazonS3ClientBuilder.standard()
             .withCredentials(new DefaultAWSCredentialsProviderChain())
             .withRegion(Regions.US_EAST_2)
