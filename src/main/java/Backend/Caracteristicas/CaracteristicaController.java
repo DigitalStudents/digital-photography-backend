@@ -3,7 +3,6 @@ package Backend.Caracteristicas;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,7 @@ public class CaracteristicaController {
 
     @Operation(summary = "Crea una característica")
     @PostMapping
-    public void createProducto(@RequestBody Caracteristica caracteristica) {
+    public void createCaracteristica(@RequestBody Caracteristica caracteristica) {
         caracteristicaService.CrearCaracteristica(caracteristica);
     }
 
