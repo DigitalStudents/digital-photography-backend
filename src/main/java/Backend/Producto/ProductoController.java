@@ -23,7 +23,7 @@ public class ProductoController {
     @PostMapping
     public void createProducto(
             @RequestBody Producto producto,
-            @RequestParam("caracteristicaIds") List<Long> caracteristicaIds
+            @RequestParam(value = "caracteristicaIds", required = false) List<Long> caracteristicaIds
     ) {
         productoService.CrearProducto(producto);
 
@@ -32,7 +32,8 @@ public class ProductoController {
 
     @Operation(summary = "Sube una imagen al bucket s3 (USAR POSTMAN)")
     @PostMapping("/{id}/subir-imagen")
-    public void uploadImage(@PathVariable Long id, @RequestParam("image") MultipartFile image) throws IOException {
+    public void uploadImage(@PathVariable Long id,
+                            @RequestParam("image") MultipartFile image) throws IOException  {
         productoService.uploadImage(id, image);
     }
 
@@ -51,7 +52,7 @@ public class ProductoController {
     @Operation(summary = "Trae todos los productos en orden aleatorio y los pagina")
     @GetMapping("/paginacion")
     public Page<Producto> getPagination(@RequestParam(value = "pagina", defaultValue = "0") int page,
-                                          @RequestParam(value = "cantidad", defaultValue = "10") int size) {
+                                        @RequestParam(value = "cantidad", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return productoService.Paginados(pageable);
     }

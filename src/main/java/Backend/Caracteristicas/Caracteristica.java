@@ -17,6 +17,7 @@ public class Caracteristica {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
     private String nombre;
     private String descripcion;

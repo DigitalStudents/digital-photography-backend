@@ -2,6 +2,7 @@ package Backend.Producto;
 
 
 import Backend.Caracteristicas.Caracteristica;
+import Backend.Categorias.Categoria;
 import Backend.Inventory.Inventory;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Regions;
@@ -31,27 +32,38 @@ public class Producto{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
-    private String categoria;
+
+    @Column(unique = true)
     private String nombre;
     private double precio;
+
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "product_imagenes", joinColumns = @JoinColumn(name = "product_id"))
+    @CollectionTable(name = "producto_imagenes", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "imagen_url")
     private List<String> imagenes;
-    @Column(unique = true)
+
     @ManyToMany
     @JoinTable(
-            name = "producto_caracteristica",
+            name = "producto_caracteristicas",
             joinColumns = @JoinColumn(name = "producto_id"),
             inverseJoinColumns = @JoinColumn(name = "caracteristica_id")
     )
     private List<Caracteristica> caracteristicas;
 
+    @ManyToMany
+    @JoinTable(
+            name = "producto_categorias",
+            joinColumns = @JoinColumn(name = "producto_id"),
+            inverseJoinColumns = @JoinColumn(name = "categoria_id"))
+    private List<Categoria> categorias;
+
     @OneToOne(mappedBy = "producto")
     @JsonIgnore
     private Inventory inventory;
     private String descripcion;
+    @JsonIgnore
     private boolean deleted = false;
 
     private static final String S3_BUCKET_NAME ="1023c04-grupo4";
