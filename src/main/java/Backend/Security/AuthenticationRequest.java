@@ -1,4 +1,4 @@
-package Backend.Security.Request;
+package Backend.Security.Controller;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -13,16 +13,10 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegisterRequest {
-//    @NotBlank
-//    private String firstName;
-//    @NotBlank
-//    private String lastName;
+public class AuthenticationDTO {
     @NotBlank
     @Email
-    private String email;
+    private String username;
     @NotBlank
     private String password;
-    @NotBlank
-    private Set<String> roles;
 }

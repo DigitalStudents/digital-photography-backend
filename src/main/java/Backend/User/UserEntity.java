@@ -22,16 +22,14 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @NotBlank
+    private String firstName;
+    @NotBlank
+    private String lastName;
     @Email
     @NotBlank
     @Size(max = 80)
-    private String email;
-
-    @NotBlank
-    @Size(max = 30)
     private String username;
-
     @NotBlank
     private String password;
 

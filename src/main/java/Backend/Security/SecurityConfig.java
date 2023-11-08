@@ -1,6 +1,4 @@
-package Backend.Security;
-
-import Backend.Security.Filters.JwtAuthenticationFilter;
+package Backend.Config;
 import Backend.Security.Filters.JwtAuthorizationFilter;
 import Backend.Security.Jwt.JwtUtils;
 import Backend.User.Service.UserDetailsServiceImpl;
@@ -9,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,36 +18,29 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-    @Autowired
-    JwtUtils jwtUtils;
-
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
-
+//    public final static String[] PUBLIC_REQUEST_MATCHERS = {"v1/user/deleteUser","v1/auth/login","/api-docs/**", "/swagger-ui/**","v1/user/createUser" };
     @Autowired
     JwtAuthorizationFilter authorizationFilter;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
 
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
-        jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
-        jwtAuthenticationFilter.setFilterProcessesUrl("/login");
 
         return httpSecurity
                 .csrf(config -> config.disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/auth/createUser").permitAll()
-                            .requestMatchers(HttpMethod.POST).hasRole("ADMIN")
-                            .requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
-                            .requestMatchers(HttpMethod.GET).hasAnyRole("ADMIN","USER")
-                            .requestMatchers(HttpMethod.PUT).hasRole("ADMIN");
+                    auth.requestMatchers("/swagger-ui/index.html").permitAll();
+                    auth.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll();
+                    auth.requestMatchers("/v1/auth/login").permitAll();
+                    auth.requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("ADMIN", "CUSTOMER");
+                    auth.requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN");
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
-                .addFilter(jwtAuthenticationFilter)
                 .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
@@ -61,10 +52,25 @@ public class SecurityConfig {
     }
 
     @Bean
-    AuthenticationManager authenticationManager(HttpSecurity httpSecurity, PasswordEncoder passwordEncoder) throws Exception {
-        return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder)
-                .and().build();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
+
+//    @Bean
+//    AuthenticationManager authenticationManager(HttpSecurity httpSecurity, PasswordEncoder passwordEncoder) throws Exception {
+//        return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
+//                .userDetailsService(userDetailsService)
+//                .passwordEncoder(passwordEncoder)
+//                .and().build();
+//    }
+
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+//        corsConfiguration.setAllowedOrigins(Arrays.asList("localhost:8080"));
+//        corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST"));
+//        source.registerCorsConfiguration("/**", corsConfiguration);
+//        return source;
+//    }
 }
