@@ -83,6 +83,12 @@ public class ProductoServiceImpl implements ProductoService {
         return productoRepository.findByNombreContainingIgnoreCase(searchTerm, pageable);
     }
 
+    @Override
+    public List<Producto> filterProductosByCategorias(List<String> categoriaNombres) {
+        return productoRepository.findByCategorias_NombreIn(categoriaNombres);
+    }
+
+
 
     @Override
     public void ModificarProducto(Producto producto) {

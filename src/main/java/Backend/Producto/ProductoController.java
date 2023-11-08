@@ -75,6 +75,13 @@ public class ProductoController {
         return productoService.BuscarPorNombre(searchTerm, pageable);
     }
 
+    @Operation(summary = "Filtrar productos por categorías")
+    @GetMapping("/filtrar-por-categorias")
+    public List<Producto> filterProductosByCategorias(
+            @RequestParam(value = "categoriaNombres", required = true) List<String> categoriaNombres
+    ) {
+        return productoService.filterProductosByCategorias(categoriaNombres);
+    }
     @Operation(summary = "Modifica un producto")
     @PutMapping("/{id}")
     public void updateProducto(@PathVariable Long id, @RequestBody Producto producto) {

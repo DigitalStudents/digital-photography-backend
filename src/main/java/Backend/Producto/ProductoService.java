@@ -22,6 +22,8 @@ public interface ProductoService {
 
      Page<Producto> BuscarPorNombre(String searchTerm, Pageable pageable);
 
+     List<Producto> filterProductosByCategorias(List<String> categoriaNombres);
+
      void agregarCaracteristicasAProducto(Long productoId, List<Long> caracteristicaIds);
 
      void agregarCategoriasAProducto(Long productoId, List<Long> categoriaIds);
