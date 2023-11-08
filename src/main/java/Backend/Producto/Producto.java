@@ -58,6 +58,7 @@ public class Producto{
             inverseJoinColumns = @JoinColumn(name = "categoria_id"))
     private List<Categoria> categorias;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "producto")
     private Inventory inventory;
     private String descripcion;
@@ -94,6 +95,7 @@ public class Producto{
         }
     }
 
+    @JsonIgnore
     public void softDelete() {
         this.deleted = true;
     }
