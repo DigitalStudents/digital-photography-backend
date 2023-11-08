@@ -23,11 +23,18 @@ public class ProductoController {
     @PostMapping
     public void createProducto(
             @RequestBody Producto producto,
-            @RequestParam(value = "caracteristicaIds", required = true) List<Long> caracteristicaIds
+            @RequestParam(value = "caracteristicaIds", required = false) List<Long> caracteristicaIds,
+            @RequestParam(value = "categoriaIds", required = false) List<Long> categoriaIds
     ) {
         productoService.CrearProducto(producto);
 
-        productoService.agregarCaracteristicasAProducto(producto.getId(), caracteristicaIds);
+        if (caracteristicaIds != null) {
+            productoService.agregarCaracteristicasAProducto(producto.getId(), caracteristicaIds);
+        }
+
+        if (categoriaIds != null) {
+            productoService.agregarCategoriasAProducto(producto.getId(), categoriaIds);
+        }
     }
 
     @Operation(summary = "Sube una imagen al bucket s3 (USAR POSTMAN)")
@@ -82,6 +89,15 @@ public class ProductoController {
             @RequestBody List<Long> caracteristicaIds
     ) {
         productoService.agregarCaracteristicasAProducto(productoId, caracteristicaIds);
+    }
+
+    @Operation(summary = "Asocia categorías a un producto")
+    @PostMapping("/{productoId}/asociar-categorias")
+    public void addCategoriasToProducto(
+            @PathVariable Long productoId,
+            @RequestBody List<Long> categoriaIds
+    ) {
+        productoService.agregarCategoriasAProducto(productoId, categoriaIds);
     }
 
     @Operation(summary = "Borra un producto")

@@ -3,6 +3,8 @@ package Backend.Producto;
 
 import Backend.Caracteristicas.Caracteristica;
 import Backend.Caracteristicas.CaracteristicaRepository;
+import Backend.Categorias.Categoria;
+import Backend.Categorias.CategoriaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,9 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Autowired
     private CaracteristicaRepository caracteristicaRepository;
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
 
     @Override
@@ -114,6 +119,19 @@ public class ProductoServiceImpl implements ProductoService {
             List<Caracteristica> caracteristicas = caracteristicaRepository.findAllById(caracteristicaIds);
             
             producto.getCaracteristicas().addAll(caracteristicas);
+            productoRepository.save(producto);
+        }
+    }
+
+    @Override
+    public void agregarCategoriasAProducto(Long productoId, List<Long> categoriaIds) {
+        Optional<Producto> optionalProducto = productoRepository.findById(productoId);
+        if (optionalProducto.isPresent()) {
+            Producto producto = optionalProducto.get();
+
+            List<Categoria> categorias = categoriaRepository.findAllById(categoriaIds);
+
+            producto.getCategorias().addAll(categorias);
             productoRepository.save(producto);
         }
     }

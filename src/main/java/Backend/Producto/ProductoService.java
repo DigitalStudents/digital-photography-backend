@@ -24,4 +24,7 @@ public interface ProductoService {
 
      void agregarCaracteristicasAProducto(Long productoId, List<Long> caracteristicaIds);
 
+     void agregarCategoriasAProducto(Long productoId, List<Long> categoriaIds);
+
+
 }
