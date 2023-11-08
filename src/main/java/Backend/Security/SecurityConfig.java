@@ -1,7 +1,4 @@
-package Backend.Config;
-import Backend.Security.Filters.JwtAuthorizationFilter;
-import Backend.Security.Jwt.JwtUtils;
-import Backend.User.Service.UserDetailsServiceImpl;
+package Backend.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-//    public final static String[] PUBLIC_REQUEST_MATCHERS = {"v1/user/deleteUser","v1/auth/login","/api-docs/**", "/swagger-ui/**","v1/user/createUser" };
+//    public final static String[] PUBLIC_REQUEST_MATCHERS = {"v1/user/**","v1/auth/**","api-docs/**", "swagger-ui/**","v1/user/createUser" };
     @Autowired
     JwtAuthorizationFilter authorizationFilter;
 
@@ -30,12 +27,12 @@ public class SecurityConfig {
                 .csrf(config -> config.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/swagger-ui/index.html").permitAll();
-                    auth.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll();
-                    auth.requestMatchers("/v1/auth/login").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("ADMIN", "CUSTOMER");
-                    auth.requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN");
-                    auth.requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN");
-                    auth.requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN");
+                    auth.requestMatchers("/api-docs/**", "/swagger-ui/**").permitAll();
+                    auth.requestMatchers("/user/auth/login").permitAll();
+                    auth.requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.POST, "/user/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.PUT, "/user/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN");
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {
@@ -55,6 +52,26 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
+
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("*")); // Permite solicitudes desde cualquier origen
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+//        configuration.setAllowedHeaders(Arrays.asList("*"));
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//
+//        return source;
+//    }
+//
+//    @Bean
+//    public FilterRegistrationBean corsFilter() {
+//        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter());
+//        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+//        return bean;
+//    }
 
 //    @Bean
 //    AuthenticationManager authenticationManager(HttpSecurity httpSecurity, PasswordEncoder passwordEncoder) throws Exception {

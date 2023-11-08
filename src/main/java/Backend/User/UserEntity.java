@@ -1,5 +1,6 @@
-package Backend.User.Model;
+package Backend.User;
 
+import Backend.User.RoleEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

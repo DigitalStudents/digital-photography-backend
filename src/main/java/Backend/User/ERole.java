@@ -1,4 +1,4 @@
-package Backend.User.Model;
+package Backend.User;
 
 public enum ERole {
     ADMIN,USER

@@ -1,7 +1,7 @@
-package Backend.User.Service;
+package Backend.User;
 
-import Backend.User.Model.UserEntity;
-import Backend.User.Repository.UserRepository;
+import Backend.User.UserEntity;
+import Backend.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

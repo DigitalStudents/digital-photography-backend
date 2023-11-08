@@ -1,10 +1,7 @@
-package Backend.User.Repository;
-
-
-import Backend.User.Model.RoleEntity;
-import org.springframework.data.repository.CrudRepository;
+package Backend.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RoleRepository extends CrudRepository<RoleEntity, Long> {
+public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
 }

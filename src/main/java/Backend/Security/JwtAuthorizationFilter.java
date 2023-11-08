@@ -1,7 +1,6 @@
-package Backend.Security.Filters;
+package Backend.Security;
 
-import Backend.Security.Jwt.JwtUtils;
-import Backend.User.Service.UserDetailsServiceImpl;
+import Backend.User.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
