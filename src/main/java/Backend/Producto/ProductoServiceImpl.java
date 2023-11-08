@@ -110,7 +110,9 @@ public class ProductoServiceImpl implements ProductoService {
         Optional<Producto> optionalProducto = productoRepository.findById(productoId);
         if (optionalProducto.isPresent()) {
             Producto producto = optionalProducto.get();
+
             List<Caracteristica> caracteristicas = caracteristicaRepository.findAllById(caracteristicaIds);
+            
             producto.getCaracteristicas().addAll(caracteristicas);
             productoRepository.save(producto);
         }

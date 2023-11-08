@@ -23,7 +23,7 @@ public class ProductoController {
     @PostMapping
     public void createProducto(
             @RequestBody Producto producto,
-            @RequestParam(value = "caracteristicaIds", required = false) List<Long> caracteristicaIds
+            @RequestParam(value = "caracteristicaIds", required = true) List<Long> caracteristicaIds
     ) {
         productoService.CrearProducto(producto);
 

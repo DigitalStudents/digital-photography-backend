@@ -18,12 +18,12 @@ public class Categoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
     private String nombre;
     private String descripcion;
 
     @ManyToMany(mappedBy = "categorias")
+    @JsonIgnore
     private List<Producto> productos;
 
 }

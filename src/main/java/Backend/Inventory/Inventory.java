@@ -16,6 +16,7 @@ public class Inventory {
     private Long Id;
     private int cantidad;
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "producto_id", referencedColumnName = "id", nullable = false)
     private Producto producto;
 }

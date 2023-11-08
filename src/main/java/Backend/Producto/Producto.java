@@ -32,7 +32,6 @@ public class Producto{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
 
     @Column(unique = true)
@@ -60,10 +59,8 @@ public class Producto{
     private List<Categoria> categorias;
 
     @OneToOne(mappedBy = "producto")
-    @JsonIgnore
     private Inventory inventory;
     private String descripcion;
-    @JsonIgnore
     private boolean deleted = false;
 
     private static final String S3_BUCKET_NAME ="1023c04-grupo4";
@@ -77,9 +74,24 @@ public class Producto{
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(imageFile.getSize());
 
+        String contentType = getContentTypeByFileExtension(imageFile.getOriginalFilename());
+        metadata.setContentType(contentType);
+
         S3_CLIENT.putObject(S3_BUCKET_NAME, uniqueImageName, new ByteArrayInputStream(imageFile.getBytes()), metadata);
 
         imagenes.add(uniqueImageName);
+    }
+
+    private String getContentTypeByFileExtension(String filename) {
+        if (filename.endsWith(".jpg") || filename.endsWith(".jpeg")) {
+            return "image/jpeg";
+        } else if (filename.endsWith(".png")) {
+            return "image/png";
+        } else if (filename.endsWith(".gif")) {
+            return "image/gif";
+        } else {
+            return "application/octet-stream";
+        }
     }
 
     public void softDelete() {
