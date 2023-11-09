@@ -30,6 +30,8 @@ public class SecurityConfig {
                     auth.requestMatchers("/api-docs/**", "/swagger-ui/**").permitAll();
                     auth.requestMatchers("/user/auth/login").permitAll();
                     auth.requestMatchers("/user/auth/register").permitAll();
+                    auth.requestMatchers("/send-test-email").permitAll();
+                    auth.requestMatchers("/api/verification/**").permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("ADMIN");
                     auth.requestMatchers(HttpMethod.POST, "/user/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.PUT, "/user/**").hasRole("ADMIN");

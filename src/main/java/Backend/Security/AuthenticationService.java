@@ -1,4 +1,5 @@
 package Backend.Security;
+import Backend.Email.EmailService;
 import Backend.User.UserDTO;
 import Backend.User.UserEntity;
 import Backend.User.UserRepository;
@@ -10,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class AuthenticationService implements IAuthenticationService{
 
@@ -20,6 +23,9 @@ public class AuthenticationService implements IAuthenticationService{
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     public AuthenticationService(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
@@ -48,7 +54,39 @@ public class AuthenticationService implements IAuthenticationService{
                 .username(userDTO.getUsername())
                 .password(userDTO.getPassword())
                 .build();
+
+
+        String verificationToken = UUID.randomUUID().toString();
+
+        userEntity.setVerificationToken(verificationToken);
+
         userRepository.save(userEntity);
-        return "usuario guardado con exito";
+
+
+        String verificationLink = "https://your-app-domain/verify?token=" + verificationToken;
+
+        // Send verification email
+        emailService.sendVerificationEmail(userDTO.getUsername(), verificationLink);
+
+        return "Usuario registrado con éxito. Se ha enviado un correo de verificación.";
     }
+
+    public boolean verifyAccount(String verificationToken) {
+        // Find user by verification token
+        UserEntity userEntity = userRepository.findByVerificationToken(verificationToken);
+
+        if (userEntity != null) {
+            // Mark the user as verified (you may want to add additional checks here)
+            userEntity.setVerified(true);
+            userEntity.setVerificationToken(null); // Optional: Clear the verification token after successful verification
+
+            // Save the updated user entity
+            userRepository.save(userEntity);
+
+            return true;
+        }
+
+        return false;
+    }
+
 }
