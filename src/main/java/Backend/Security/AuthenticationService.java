@@ -4,6 +4,7 @@ import Backend.User.UserDTO;
 import Backend.User.UserEntity;
 import Backend.User.UserRepository;
 import Backend.exceptions.BadRequestException;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,7 +48,7 @@ public class AuthenticationService implements IAuthenticationService{
     }
 
     @Override
-    public String register(UserDTO userDTO) {
+    public String register(UserDTO userDTO) throws MessagingException {
         UserEntity userEntity = UserEntity.builder()
                 .firstName(userDTO.getFirstName())
                 .lastName(userDTO.getLastName())
@@ -63,24 +64,20 @@ public class AuthenticationService implements IAuthenticationService{
         userRepository.save(userEntity);
 
 
-        String verificationLink = "https://your-app-domain/verify?token=" + verificationToken;
+        String verificationLink = "http://localhost:8080/api/verification/verify?token=" + verificationToken;
 
-        // Send verification email
         emailService.sendVerificationEmail(userDTO.getUsername(), verificationLink);
 
         return "Usuario registrado con éxito. Se ha enviado un correo de verificación.";
     }
 
     public boolean verifyAccount(String verificationToken) {
-        // Find user by verification token
         UserEntity userEntity = userRepository.findByVerificationToken(verificationToken);
 
         if (userEntity != null) {
-            // Mark the user as verified (you may want to add additional checks here)
             userEntity.setVerified(true);
-            userEntity.setVerificationToken(null); // Optional: Clear the verification token after successful verification
+            userEntity.setVerificationToken(null);
 
-            // Save the updated user entity
             userRepository.save(userEntity);
 
             return true;

@@ -17,9 +17,9 @@ public class EmailTestController {
     public ResponseEntity<String> sendTestEmail(@RequestParam String to) {
         try {
             emailTestService.sendTestEmail(to);
-            return new ResponseEntity<>("Test email sent successfully.", HttpStatus.OK);
+            return new ResponseEntity<>("Email Test enviado con éxito.", HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Failed to send test email. Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error al enviar el Email. Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

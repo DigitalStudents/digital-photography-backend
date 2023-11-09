@@ -16,7 +16,6 @@ public class VerificationController {
 
     @GetMapping("/verify")
     public ResponseEntity<String> verifyAccount(@RequestParam("token") String token) {
-        // Validate the verification token
         boolean isVerified = authenticationService.verifyAccount(token);
 
         if (isVerified) {

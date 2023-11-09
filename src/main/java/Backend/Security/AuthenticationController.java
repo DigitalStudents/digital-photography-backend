@@ -1,5 +1,6 @@
 package Backend.Security;
 import Backend.User.UserDTO;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String>register(@Valid @RequestBody UserDTO userDTO){
+    public ResponseEntity<String>register(@Valid @RequestBody UserDTO userDTO) throws MessagingException {
 
         return new ResponseEntity<>(iAuthenticationService.register(userDTO),HttpStatus.OK);
     }
