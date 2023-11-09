@@ -1,4 +1,5 @@
 package Backend.Security;
+import Backend.User.UserDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,12 @@ public class AuthenticationController {
     public ResponseEntity<String>Login(@Valid @RequestBody AuthenticationRequest authenticationRequest){
 
         return new ResponseEntity<>(iAuthenticationService.login(authenticationRequest),HttpStatus.OK);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<String>register(@Valid @RequestBody UserDTO userDTO){
+
+        return new ResponseEntity<>(iAuthenticationService.register(userDTO),HttpStatus.OK);
     }
 
 
