@@ -1,7 +1,8 @@
 package Backend.Producto;
 
 
-
+import Backend.Caracteristicas.Caracteristica;
+import Backend.Categorias.Categoria;
 import Backend.Inventory.Inventory;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Regions;
@@ -32,17 +33,38 @@ public class Producto{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String categoria;
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "product_imagenes", joinColumns = @JoinColumn(name = "product_id"))
-    @Column(name = "imagen_url")
-    private List<String> imagenes;
+
     @Column(unique = true)
     private String nombre;
-    private String descripcion;
     private double precio;
 
-    private static final String S3_BUCKET_NAME ="1023c04-grupo1";
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "producto_imagenes", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "imagen_url")
+    private List<String> imagenes;
+
+    @ManyToMany
+    @JoinTable(
+            name = "producto_caracteristicas",
+            joinColumns = @JoinColumn(name = "producto_id"),
+            inverseJoinColumns = @JoinColumn(name = "caracteristica_id")
+    )
+    private List<Caracteristica> caracteristicas;
+
+    @ManyToMany
+    @JoinTable(
+            name = "producto_categorias",
+            joinColumns = @JoinColumn(name = "producto_id"),
+            inverseJoinColumns = @JoinColumn(name = "categoria_id"))
+    private List<Categoria> categorias;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "producto")
+    private Inventory inventory;
+    private String descripcion;
+    private boolean deleted = false;
+
+    private static final String S3_BUCKET_NAME ="1023c04-grupo4";
     private static final AmazonS3 S3_CLIENT = AmazonS3ClientBuilder.standard()
             .withCredentials(new DefaultAWSCredentialsProviderChain())
             .withRegion(Regions.US_EAST_2)
@@ -53,17 +75,27 @@ public class Producto{
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(imageFile.getSize());
 
+        String contentType = getContentTypeByFileExtension(imageFile.getOriginalFilename());
+        metadata.setContentType(contentType);
+
         S3_CLIENT.putObject(S3_BUCKET_NAME, uniqueImageName, new ByteArrayInputStream(imageFile.getBytes()), metadata);
 
         imagenes.add(uniqueImageName);
     }
 
+    private String getContentTypeByFileExtension(String filename) {
+        if (filename.endsWith(".jpg") || filename.endsWith(".jpeg")) {
+            return "image/jpeg";
+        } else if (filename.endsWith(".png")) {
+            return "image/png";
+        } else if (filename.endsWith(".gif")) {
+            return "image/gif";
+        } else {
+            return "application/octet-stream";
+        }
+    }
 
-    @OneToOne(mappedBy = "producto")
     @JsonIgnore
-    private Inventory inventory;
-    private boolean deleted = false;
-
     public void softDelete() {
         this.deleted = true;
     }

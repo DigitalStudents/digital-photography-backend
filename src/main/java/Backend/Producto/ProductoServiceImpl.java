@@ -1,6 +1,10 @@
 package Backend.Producto;
 
 
+import Backend.Caracteristicas.Caracteristica;
+import Backend.Caracteristicas.CaracteristicaRepository;
+import Backend.Categorias.Categoria;
+import Backend.Categorias.CategoriaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,14 +17,18 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
-
-
 public class ProductoServiceImpl implements ProductoService {
 
     private List<Producto> shuffledProducts = null;
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired
+    private CaracteristicaRepository caracteristicaRepository;
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
 
     @Override
@@ -75,6 +83,12 @@ public class ProductoServiceImpl implements ProductoService {
         return productoRepository.findByNombreContainingIgnoreCase(searchTerm, pageable);
     }
 
+    @Override
+    public List<Producto> filterProductosByCategorias(List<String> categoriaNombres) {
+        return productoRepository.findByCategorias_NombreIn(categoriaNombres);
+    }
+
+
 
     @Override
     public void ModificarProducto(Producto producto) {
@@ -98,6 +112,32 @@ public class ProductoServiceImpl implements ProductoService {
         if (productoOptional.isPresent()) {
             Producto producto = productoOptional.get();
             producto.restore();
+            productoRepository.save(producto);
+        }
+    }
+
+    @Override
+    public void agregarCaracteristicasAProducto(Long productoId, List<Long> caracteristicaIds) {
+        Optional<Producto> optionalProducto = productoRepository.findById(productoId);
+        if (optionalProducto.isPresent()) {
+            Producto producto = optionalProducto.get();
+
+            List<Caracteristica> caracteristicas = caracteristicaRepository.findAllById(caracteristicaIds);
+            
+            producto.getCaracteristicas().addAll(caracteristicas);
+            productoRepository.save(producto);
+        }
+    }
+
+    @Override
+    public void agregarCategoriasAProducto(Long productoId, List<Long> categoriaIds) {
+        Optional<Producto> optionalProducto = productoRepository.findById(productoId);
+        if (optionalProducto.isPresent()) {
+            Producto producto = optionalProducto.get();
+
+            List<Categoria> categorias = categoriaRepository.findAllById(categoriaIds);
+
+            producto.getCategorias().addAll(categorias);
             productoRepository.save(producto);
         }
     }

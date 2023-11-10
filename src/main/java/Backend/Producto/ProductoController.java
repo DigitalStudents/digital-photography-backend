@@ -22,32 +22,49 @@ public class ProductoController {
     private ProductoService productoService;
     @Operation(summary = "Crea un Producto")
     @PostMapping
-    public void createProducto(@RequestBody Producto camera) {
-        productoService.CrearProducto(camera);
+    public void createProducto(
+            @RequestBody Producto producto,
+            @RequestParam(value = "caracteristicaIds", required = false) List<Long> caracteristicaIds,
+            @RequestParam(value = "categoriaIds", required = false) List<Long> categoriaIds
+    ) {
+        productoService.CrearProducto(producto);
+
+        if (caracteristicaIds != null) {
+            productoService.agregarCaracteristicasAProducto(producto.getId(), caracteristicaIds);
+        }
+
+        if (categoriaIds != null) {
+            productoService.agregarCategoriasAProducto(producto.getId(), categoriaIds);
+        }
     }
 
     @Operation(summary = "Sube una imagen al bucket s3 (USAR POSTMAN)")
     @PostMapping("/{id}/subir-imagen")
-    public void uploadImage(@PathVariable Long id, @RequestParam("image") MultipartFile image) throws IOException {
+    public void uploadImage(@PathVariable Long id,
+                            @RequestParam("image") MultipartFile image) throws IOException  {
         productoService.uploadImage(id, image);
     }
+
     @Operation(summary = "Trae un producto por su ID")
     @GetMapping("/{id}")
         public Optional<Producto> getProducto(@PathVariable Long id) {
         return productoService.BuscarProducto(id);
     }
+
     @Operation(summary = "Trae todos los productos")
     @GetMapping
     public List<Producto> getAllProductos() {
         return productoService.TraerTodos();
     }
+
     @Operation(summary = "Trae todos los productos en orden aleatorio y los pagina")
     @GetMapping("/paginacion")
     public Page<Producto> getPagination(@RequestParam(value = "pagina", defaultValue = "0") int page,
-                                          @RequestParam(value = "cantidad", defaultValue = "10") int size) {
+                                        @RequestParam(value = "cantidad", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return productoService.Paginados(pageable);
     }
+
     @Operation(summary = "Buscador de productos (paginado también)")
     @GetMapping("/buscador")
     public Page<Producto> searchProductos(
@@ -58,12 +75,39 @@ public class ProductoController {
         Pageable pageable = PageRequest.of(page, size);
         return productoService.BuscarPorNombre(searchTerm, pageable);
     }
+
+    @Operation(summary = "Filtrar productos por categorías")
+    @GetMapping("/filtrar-por-categorias")
+    public List<Producto> filterProductosByCategorias(
+            @RequestParam(value = "categoriaNombres", required = true) List<String> categoriaNombres
+    ) {
+        return productoService.filterProductosByCategorias(categoriaNombres);
+    }
     @Operation(summary = "Modifica un producto")
     @PutMapping("/{id}")
-    public void updateProducto(@PathVariable Long id, @RequestBody Producto camera) {
-        camera.setId(id);
-        productoService.ModificarProducto(camera);
+    public void updateProducto(@PathVariable Long id, @RequestBody Producto producto) {
+        producto.setId(id);
+        productoService.ModificarProducto(producto);
     }
+
+    @Operation(summary = "Asocia características a un producto")
+    @PostMapping("/{productoId}/asociar-caracteristicas")
+    public void addCaracteristicasToProducto(
+            @PathVariable Long productoId,
+            @RequestBody List<Long> caracteristicaIds
+    ) {
+        productoService.agregarCaracteristicasAProducto(productoId, caracteristicaIds);
+    }
+
+    @Operation(summary = "Asocia categorías a un producto")
+    @PostMapping("/{productoId}/asociar-categorias")
+    public void addCategoriasToProducto(
+            @PathVariable Long productoId,
+            @RequestBody List<Long> categoriaIds
+    ) {
+        productoService.agregarCategoriasAProducto(productoId, categoriaIds);
+    }
+
     @Operation(summary = "Borra un producto")
     @DeleteMapping("/{id}")
     public void deleteProducto(@PathVariable Long id) {
