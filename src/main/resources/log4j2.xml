@@ -5,7 +5,7 @@
         <!-- Console appender, outputs logs to the console -->
         <Console name="Console" target="SYSTEM_OUT">
             <!-- Define the pattern layout for console logs -->
-            <PatternLayout pattern="%style{%d{ISO8601}}{black} %highlight{%highlight{%-5level}{FATAL=red, ERROR=red, WARN=yellow, INFO=red, DEBUG=blue, TRACE=white}} [%style{%t}{bright,blue}] %highlight{%style{%C{1.}}{bright,yellow}}: %msg%n%throwable"/>
+            <PatternLayout pattern="%style{%d{ISO8601}}{black} %highlight{%highlight{%-5level}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=blue, TRACE=white}} [%style{%t}{bright,blue}] %highlight{%style{%C{1.}}{bright,yellow}}: %msg%n%throwable"/>
         </Console>
 
         <!-- Rolling file appender, writes logs to a rolling file -->
@@ -24,9 +24,9 @@
         <!-- Root logger, logs everything at INFO level -->
         <Root level="info">
             <!-- Attach the console appender to the root logger for all log levels -->
-            <AppenderRef ref="Console" level="trace"/>
+            <AppenderRef ref="Console" level="info"/>
             <!-- Attach the file appender to the root logger for ERROR level and above -->
-            <AppenderRef ref="RollingFile" level="info"/>
+            <AppenderRef ref="RollingFile" level="warn"/>
         </Root>
 
         <!-- Specific logger for "com.mytest.project*" at TRACE level -->
