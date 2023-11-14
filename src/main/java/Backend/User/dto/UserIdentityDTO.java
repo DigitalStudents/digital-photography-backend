@@ -17,15 +17,9 @@ import lombok.NoArgsConstructor;
 public class UserIdentityDTO {
 
         private Long id;
-        @NotBlank
         private String firstName;
-        @NotBlank
         private String lastName;
-        @NotBlank
-        @Email
         private String username;
-        @NotBlank
-        private String password;
 
         @Enumerated(EnumType.STRING)
         private ERole role;

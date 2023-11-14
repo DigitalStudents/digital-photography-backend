@@ -80,6 +80,7 @@ public class UserService implements IUserService {
                     .firstName(userRepo.getFirstName())
                     .lastName((userRepo.getLastName()))
                     .username(userRepo.getUsername())
+                    .role(userRepo.getRole())
                     .build();
 
             userEntityDTOS.add(userEntityDTO);
@@ -108,15 +109,15 @@ public class UserService implements IUserService {
         return "Roles Actualizados";
     }
 
-        private UserEntityDTO createIfNotExist (UserEntityDTO userEntityDTO){
+    private UserEntityDTO createIfNotExist (UserEntityDTO userEntityDTO){
 
-            UserEntity userEntity= UserEntity.builder()
-                    .firstName(userEntityDTO.getFirstName())
-                    .lastName(userEntityDTO.getLastName())
-                    .username(userEntityDTO.getUsername())
-                    .password(passwordEncoder.encode(userEntityDTO.getPassword()))
-                    .role(ERole.valueOf(userEntityDTO.getRole().name()))
-                    .build();
+        UserEntity userEntity= UserEntity.builder()
+                .firstName(userEntityDTO.getFirstName())
+                .lastName(userEntityDTO.getLastName())
+                .username(userEntityDTO.getUsername())
+                .password(passwordEncoder.encode(userEntityDTO.getPassword()))
+                .role(ERole.valueOf(userEntityDTO.getRole().name()))
+                .build();
 
             if (!userRepository.existsById(1L)) {
                 userRepository.save(userEntity);
