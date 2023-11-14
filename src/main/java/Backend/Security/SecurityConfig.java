@@ -29,7 +29,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/swagger-ui/index.html").permitAll();
                     auth.requestMatchers("/api-docs/**", "/swagger-ui/**").permitAll();
                     auth.requestMatchers("/user/auth/login").permitAll();
-                    auth.requestMatchers("/user/auth/register").permitAll();
+                    auth.requestMatchers("/user/crud/register").permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("ADMIN");
                     auth.requestMatchers(HttpMethod.POST, "/user/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.PUT, "/user/**").hasRole("ADMIN");
@@ -54,41 +54,4 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("*")); // Permite solicitudes desde cualquier origen
-//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-//        configuration.setAllowedHeaders(Arrays.asList("*"));
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//
-//        return source;
-//    }
-//
-//    @Bean
-//    public FilterRegistrationBean corsFilter() {
-//        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter());
-//        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
-//        return bean;
-//    }
-
-//    @Bean
-//    AuthenticationManager authenticationManager(HttpSecurity httpSecurity, PasswordEncoder passwordEncoder) throws Exception {
-//        return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
-//                .userDetailsService(userDetailsService)
-//                .passwordEncoder(passwordEncoder)
-//                .and().build();
-//    }
-
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
-//        corsConfiguration.setAllowedOrigins(Arrays.asList("localhost:8080"));
-//        corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST"));
-//        source.registerCorsConfiguration("/**", corsConfiguration);
-//        return source;
-//    }
 }

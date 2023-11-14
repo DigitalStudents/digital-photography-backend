@@ -1,9 +1,8 @@
 package Backend;
 
-import Backend.User.ERole;
-import Backend.User.RoleEntity;
-import Backend.User.UserEntity;
-import Backend.User.UserRepository;
+import Backend.User.Model.ERole;
+import Backend.User.Model.UserEntity;
+import Backend.User.Crud.UserRepository;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -18,8 +17,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Set;
-
 @SpringBootApplication
 public class BookingLensApplication {
 
@@ -28,40 +25,55 @@ public class BookingLensApplication {
 	}
 
 
-	@Autowired
-	PasswordEncoder passwordEncoder;
+//	@Autowired
+//	PasswordEncoder passwordEncoder;
+//
+//	@Autowired
+//	UserRepository userRepository;
 
-	@Autowired
-	UserRepository userRepository;
-
-	@Bean
-	CommandLineRunner init(){
-		return args -> {
-
-			UserEntity userEntity = UserEntity.builder()
-					.firstName("henry")
-					.lastName("martinez")
-					.username("henry@mail")
-					.password(passwordEncoder.encode("1234"))
-					.roles(Set.of(RoleEntity.builder()
-							.name(ERole.valueOf(ERole.ADMIN.name()))
-							.build()))
-					.build();
-
-			UserEntity userEntity2 = UserEntity.builder()
-					.firstName("anyi")
-					.lastName("lucia")
-					.username("anyi@mail.com")
-					.password(passwordEncoder.encode("1234"))
-					.roles(Set.of(RoleEntity.builder()
-							.name(ERole.valueOf(ERole.USER.name()))
-							.build()))
-					.build();
-
-			userRepository.save(userEntity);
-			userRepository.save(userEntity2);
-		};
-	}
+//	@Bean
+//	CommandLineRunner init(){
+//		return args -> {
+//
+//			UserEntity userEntity1 = UserEntity.builder()
+//					.firstName("henry")
+//					.lastName("martinez")
+//					.username("henry@mail")
+//					.password(passwordEncoder.encode("1234"))
+//					.role(ERole.ADMIN)
+//					.build();
+//
+//			UserEntity userEntity2 = UserEntity.builder()
+//					.firstName("anyi")
+//					.lastName("rojas")
+//					.username("anyi@mail.com")
+//					.password(passwordEncoder.encode("1234"))
+//					.role(ERole.USER)
+//					.build();
+//
+//			UserEntity userEntity3 = UserEntity.builder()
+//					.firstName("julian")
+//					.lastName("perez")
+//					.username("julian@mail.com")
+//					.password(passwordEncoder.encode("1234"))
+//					.role(ERole.USER)
+//					.build();
+//
+//			UserEntity userEntity4 = UserEntity.builder()
+//					.firstName("carmen ")
+//					.lastName("cristo")
+//					.username("anyi@mail.com")
+//					.password(passwordEncoder.encode("1234"))
+//					.role(ERole.USER)
+//					.build();
+//
+//			userRepository.save(userEntity1);
+//			userRepository.save(userEntity2);
+//			userRepository.save(userEntity3);
+//			userRepository.save(userEntity4);
+//
+//		};
+//	}
 
 
 	private SecurityScheme createAPIKeyScheme() {

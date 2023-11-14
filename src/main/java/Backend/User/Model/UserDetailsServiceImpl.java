@@ -1,7 +1,6 @@
-package Backend.User;
+package Backend.User.Model;
 
-import Backend.User.UserEntity;
-import Backend.User.UserRepository;
+import Backend.User.Crud.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -26,9 +26,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserEntity userEntity = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("El usuario " + username + " no existe."));
 
-        Collection<? extends GrantedAuthority> authorities = userEntity.getRoles()
-                .stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_".concat(role.getName().name())))
+        Collection<? extends GrantedAuthority> authorities = Stream.of(new SimpleGrantedAuthority((userEntity.getRole().name())))
+                .map(role -> new SimpleGrantedAuthority("ROLE_".concat(role.getAuthority())))
                 .collect(Collectors.toSet());
 
         return new User(userEntity.getUsername(),

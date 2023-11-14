@@ -13,7 +13,6 @@ import java.security.Key;
 import java.util.Date;
 import java.util.function.Function;
 @Component
-@Slf4j
 public class JwtUtils {
 
     @Value("${jwt.secret.key}")
@@ -43,7 +42,6 @@ public class JwtUtils {
                     .getBody();
             return true;
         }catch (Exception e){
-            log.error("Token invalido, error: ".concat(e.getMessage()));
             return false;
         }
     }

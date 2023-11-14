@@ -1,9 +1,8 @@
-package Backend.Security;
+package Backend.User.Auth;
 
-import Backend.User.UserDTO;
+import Backend.User.dto.UserEntityDTO;
 
 public interface IAuthenticationService{
 
     String login (AuthenticationRequest authenticationRequest);
-    String register (UserDTO userDTO);
 }

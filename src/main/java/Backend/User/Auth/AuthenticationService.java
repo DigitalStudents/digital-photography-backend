@@ -1,17 +1,20 @@
-package Backend.Security;
-import Backend.User.UserDTO;
-import Backend.User.UserEntity;
-import Backend.User.UserRepository;
+package Backend.User.Auth;
+import Backend.Security.JwtUtils;
+import Backend.User.Crud.UserRepository;
+import Backend.User.Model.ERole;
+import Backend.User.Model.UserEntity;
+import Backend.User.dto.UserEntityDTO;
 import Backend.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthenticationService implements IAuthenticationService{
+public class AuthenticationService implements IAuthenticationService {
 
     @Autowired
     private final AuthenticationManager authenticationManager;
@@ -20,6 +23,10 @@ public class AuthenticationService implements IAuthenticationService{
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     @Autowired
     public AuthenticationService(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
@@ -40,15 +47,5 @@ public class AuthenticationService implements IAuthenticationService{
 
     }
 
-    @Override
-    public String register(UserDTO userDTO) {
-        UserEntity userEntity = UserEntity.builder()
-                .firstName(userDTO.getFirstName())
-                .lastName(userDTO.getLastName())
-                .username(userDTO.getUsername())
-                .password(userDTO.getPassword())
-                .build();
-        userRepository.save(userEntity);
-        return "usuario guardado con exito";
-    }
+
 }

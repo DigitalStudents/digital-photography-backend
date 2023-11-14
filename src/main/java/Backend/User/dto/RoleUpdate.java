@@ -1,6 +1,5 @@
-package Backend.Security;
+package Backend.User.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,13 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class AuthenticationRequest {
+public class RoleUpdate {
     @NotBlank
-    @Email
-    private String username;
+    private Long id;
     @NotBlank
-    private String password;
+    private boolean admin;
 }
