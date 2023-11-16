@@ -30,6 +30,10 @@ public class UserEntity {
     @NotBlank
     private String password;
 
+    private String verificationToken;
+    @Column(name = "is_verified")
+    private boolean isVerified;
+
     @Enumerated(EnumType.STRING)
     private ERole role;
 }

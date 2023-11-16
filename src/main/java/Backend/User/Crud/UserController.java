@@ -2,6 +2,7 @@ package Backend.User.Crud;
 import Backend.User.dto.RoleUpdate;
 import Backend.User.dto.UserEntityDTO;
 import Backend.User.dto.UserIdentityDTO;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,13 +19,13 @@ public class UserController {
     private IUserService iUserService;
 
     @PostMapping("/register")
-    public ResponseEntity<String>register(@Valid @RequestBody UserEntityDTO userEntityDTO){
+    public ResponseEntity<String>register(@Valid @RequestBody UserEntityDTO userEntityDTO) throws MessagingException {
 
         return new ResponseEntity<>(iUserService.register(userEntityDTO),HttpStatus.OK);
     }
 
     @PostMapping("/createUser")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserEntityDTO userEntityDTO) {
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserEntityDTO userEntityDTO) throws MessagingException {
        return new ResponseEntity<>(iUserService.create(userEntityDTO), HttpStatus.OK);
     }
 

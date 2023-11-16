@@ -26,7 +26,6 @@ public class EmailService {
         helper.setFrom(email);
         helper.setSubject("Bienvenido a FilmBook - Verificación de cuenta");
 
-        // Set HTML content for the email
         String htmlContent = "<html><body style=\"text-align: center;\">"
                 + "<div style=\"background-color: #f2f2f2; padding: 20px; border-radius: 10px;\">"
                 + "<h2 style=\"color: #333;\">¡Bienvenido a FilmBook!</h2>"
