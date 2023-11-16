@@ -70,18 +70,27 @@ public class Producto{
             .withRegion(Regions.US_EAST_2)
             .build();
 
-    public void uploadImageToS3(MultipartFile imageFile) throws IOException {
-        String uniqueImageName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(imageFile.getSize());
+    public void uploadImagesToS3(List<MultipartFile> imageFiles) throws IOException {
+        for (MultipartFile imageFile : imageFiles) {
+            String uniqueImageName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(imageFile.getSize());
 
-        String contentType = getContentTypeByFileExtension(imageFile.getOriginalFilename());
-        metadata.setContentType(contentType);
+            String contentType = getContentTypeByFileExtension(imageFile.getOriginalFilename());
+            metadata.setContentType(contentType);
 
-        S3_CLIENT.putObject(S3_BUCKET_NAME, uniqueImageName, new ByteArrayInputStream(imageFile.getBytes()), metadata);
+            S3_CLIENT.putObject(S3_BUCKET_NAME, uniqueImageName, new ByteArrayInputStream(imageFile.getBytes()), metadata);
 
-        imagenes.add(uniqueImageName);
+            String imageUrl = generateS3ImageUrl(uniqueImageName);
+
+            imagenes.add(imageUrl);
+        }
     }
+
+    private String generateS3ImageUrl(String imageName) {
+        return "https://" + S3_BUCKET_NAME + ".s3.amazonaws.com/" + imageName;
+    }
+
 
     private String getContentTypeByFileExtension(String filename) {
         if (filename.endsWith(".jpg") || filename.endsWith(".jpeg")) {

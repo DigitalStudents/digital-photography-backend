@@ -38,11 +38,11 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     @Transactional
-    public void uploadImage(Long productId, MultipartFile imagen) throws IOException {
+    public void uploadImages(Long productId, List<MultipartFile> imageFiles) throws IOException {
         Optional<Producto> optionalProducto = productoRepository.findById(productId);
         if (optionalProducto.isPresent()) {
             Producto producto = optionalProducto.get();
-            producto.uploadImageToS3(imagen);
+            producto.uploadImagesToS3(imageFiles);
             productoRepository.save(producto);
         }
     }
@@ -59,23 +59,17 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public Page<Producto> Paginados(Pageable pageable) {
-
-        if (shuffledProducts == null) {
-            shuffledProducts = productoRepository.findAll();
-            Collections.shuffle(shuffledProducts);
-        }
-
+        List<Producto> allProducts = productoRepository.findAll();
 
         int pageSize = pageable.getPageSize();
         int pageNumber = pageable.getPageNumber();
         int startIndex = pageNumber * pageSize;
-        int endIndex = Math.min(startIndex + pageSize, shuffledProducts.size());
+        int endIndex = Math.min(startIndex + pageSize, allProducts.size());
 
+        List<Producto> productsOnPage = allProducts.subList(startIndex, endIndex);
+        Collections.shuffle(productsOnPage);
 
-        List<Producto> productsOnPage = shuffledProducts.subList(startIndex, endIndex);
-
-
-        return new PageImpl<>(productsOnPage, pageable, shuffledProducts.size());
+        return new PageImpl<>(productsOnPage, pageable, allProducts.size());
     }
 
     @Override
