@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,13 +22,22 @@ public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
+
     @Operation(summary = "Crea un Producto")
     @PostMapping
     public void createProducto(
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
             @RequestBody Producto producto,
             @RequestParam(value = "caracteristicaIds", required = false) List<Long> caracteristicaIds,
             @RequestParam(value = "categoriaIds", required = false) List<Long> categoriaIds
     ) {
+        if (images != null && !images.isEmpty()) {
+            try {
+                producto.uploadImagesToS3(images);
+            } catch (IOException ignored) {
+            }
+        }
+
         productoService.CrearProducto(producto);
 
         if (caracteristicaIds != null) {
@@ -41,8 +52,9 @@ public class ProductoController {
     @Operation(summary = "Sube una imagen al bucket s3 (USAR POSTMAN)")
     @PostMapping("/{id}/subir-imagen")
     public void uploadImage(@PathVariable Long id,
-                            @RequestParam("image") MultipartFile image) throws IOException  {
-        productoService.uploadImage(id, image);
+                            @RequestParam("image") MultipartFile image) throws IOException {
+        List<MultipartFile> imageFiles = Collections.singletonList(image);
+        productoService.uploadImages(id, imageFiles);
     }
 
     @Operation(summary = "Trae un producto por su ID")

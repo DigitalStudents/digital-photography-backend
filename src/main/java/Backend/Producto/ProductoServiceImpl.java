@@ -38,11 +38,11 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     @Transactional
-    public void uploadImage(Long productId, MultipartFile imagen) throws IOException {
+    public void uploadImages(Long productId, List<MultipartFile> imageFiles) throws IOException {
         Optional<Producto> optionalProducto = productoRepository.findById(productId);
         if (optionalProducto.isPresent()) {
             Producto producto = optionalProducto.get();
-            producto.uploadImageToS3(imagen);
+            producto.uploadImagesToS3(imageFiles);
             productoRepository.save(producto);
         }
     }

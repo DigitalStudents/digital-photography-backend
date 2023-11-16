@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface ProductoService {
 
      void CrearProducto (Producto producto);
-     void uploadImage(Long productId, MultipartFile image) throws IOException;
+     void uploadImages(Long productId, List<MultipartFile> imageFiles) throws IOException;
      Optional<Producto> BuscarProducto(Long id);
      List<Producto> TraerTodos();
 
