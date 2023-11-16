@@ -1,8 +1,5 @@
 package Backend;
 
-import Backend.User.Model.ERole;
-import Backend.User.Model.UserEntity;
-import Backend.User.Crud.UserRepository;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -23,58 +20,6 @@ public class BookingLensApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BookingLensApplication.class, args);
 	}
-
-
-//	@Autowired
-//	PasswordEncoder passwordEncoder;
-//
-//	@Autowired
-//	UserRepository userRepository;
-
-//	@Bean
-//	CommandLineRunner init(){
-//		return args -> {
-//
-//			UserEntity userEntity1 = UserEntity.builder()
-//					.firstName("henry")
-//					.lastName("martinez")
-//					.username("henry@mail")
-//					.password(passwordEncoder.encode("1234"))
-//					.role(ERole.ADMIN)
-//					.build();
-//
-//			UserEntity userEntity2 = UserEntity.builder()
-//					.firstName("anyi")
-//					.lastName("rojas")
-//					.username("anyi@mail.com")
-//					.password(passwordEncoder.encode("1234"))
-//					.role(ERole.USER)
-//					.build();
-//
-//			UserEntity userEntity3 = UserEntity.builder()
-//					.firstName("julian")
-//					.lastName("perez")
-//					.username("julian@mail.com")
-//					.password(passwordEncoder.encode("1234"))
-//					.role(ERole.USER)
-//					.build();
-//
-//			UserEntity userEntity4 = UserEntity.builder()
-//					.firstName("carmen ")
-//					.lastName("cristo")
-//					.username("anyi@mail.com")
-//					.password(passwordEncoder.encode("1234"))
-//					.role(ERole.USER)
-//					.build();
-//
-//			userRepository.save(userEntity1);
-//			userRepository.save(userEntity2);
-//			userRepository.save(userEntity3);
-//			userRepository.save(userEntity4);
-//
-//		};
-//	}
-
 
 	private SecurityScheme createAPIKeyScheme() {
 		return new SecurityScheme().type(SecurityScheme.Type.HTTP)
