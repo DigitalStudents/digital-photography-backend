@@ -26,13 +26,10 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf(config -> config.disable())
                 .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers(HttpMethod.GET,"/user/auth/verify").permitAll();
                     auth.requestMatchers("/swagger-ui/index.html").permitAll();
                     auth.requestMatchers("/api-docs/**", "/swagger-ui/**").permitAll();
-
                     auth.requestMatchers("/user/auth/login").permitAll();
-
-                    auth.requestMatchers("/user/auth/**").permitAll();
-
                     auth.requestMatchers("/user/crud/register").permitAll();
                     auth.requestMatchers("/send-test-email").permitAll();
                     auth.requestMatchers(HttpMethod.GET,"/v1/**").permitAll();

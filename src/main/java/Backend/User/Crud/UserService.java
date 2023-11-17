@@ -36,7 +36,7 @@ public class UserService implements IUserService {
     @Override
     public String register(UserEntityDTO userEntityDTO) throws MessagingException {
         createIfNotExist(userEntityDTO);
-        return "usuario guardado con exito";
+        return "Se ha enviado un correo de verificación a su Email. Por favor verifique su bandeja de entrada";
     }
 
     @Override
@@ -135,7 +135,7 @@ public class UserService implements IUserService {
 
         userRepository.save(userEntity);
 
-        String verificationLink = "http://localhost:8080/verify?token=" + verificationToken;
+        String verificationLink = "http://localhost:8080/user/auth/verify?token=" + verificationToken;
         emailService.sendVerificationEmail(userEntityDTO.getUsername(), verificationLink);
 
         return userEntityDTO;
@@ -147,7 +147,7 @@ public class UserService implements IUserService {
         if (optionalUser.isPresent()) {
             UserEntity user = optionalUser.get();
             user.setVerified(true);
-            user.setVerificationToken(null);  // Optional: Clear the token after verification
+            user.setVerificationToken(null);
             userRepository.save(user);
             return true;
         }
