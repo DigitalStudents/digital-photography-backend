@@ -26,16 +26,17 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf(config -> config.disable())
                 .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers(HttpMethod.GET,"/user/auth/verify").permitAll();
                     auth.requestMatchers("/swagger-ui/index.html").permitAll();
                     auth.requestMatchers("/api-docs/**", "/swagger-ui/**").permitAll();
                     auth.requestMatchers("/user/auth/login").permitAll();
                     auth.requestMatchers("/user/crud/register").permitAll();
+                    auth.requestMatchers("/send-test-email").permitAll();
                     auth.requestMatchers(HttpMethod.GET,"/v1/**").permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("ADMIN");
                     auth.requestMatchers(HttpMethod.POST, "/user/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.PUT, "/user/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN");
-
                     auth.requestMatchers(HttpMethod.POST, "/v1/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.PUT, "/v1/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.DELETE, "/v1/**").hasRole("ADMIN");
@@ -57,4 +58,4 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
-    }
+    }}

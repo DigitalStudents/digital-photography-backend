@@ -3,16 +3,19 @@ import Backend.Security.JwtUtils;
 import Backend.User.Model.ERole;
 import Backend.User.Model.UserEntity;
 import Backend.User.dto.RoleUpdate;
+import Backend.Email.EmailService;
 import Backend.User.dto.UserEntityDTO;
 import Backend.User.dto.UserIdentityDTO;
 import Backend.exceptions.BadRequestException;
 import Backend.exceptions.ConflictException;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,15 +29,18 @@ public class UserService implements IUserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EmailService emailService;
+
 
     @Override
-    public String register(UserEntityDTO userEntityDTO) {
+    public String register(UserEntityDTO userEntityDTO) throws MessagingException {
         createIfNotExist(userEntityDTO);
-        return "usuario guardado con exito";
+        return "Se ha enviado un correo de verificación a su Email. Por favor verifique su bandeja de entrada";
     }
 
     @Override
-    public UserEntityDTO create(UserEntityDTO userEntityDTO) {
+    public UserEntityDTO create(UserEntityDTO userEntityDTO) throws MessagingException {
         return createIfNotExist(userEntityDTO);
     }
 
@@ -109,28 +115,44 @@ public class UserService implements IUserService {
         return "Roles Actualizados";
     }
 
-    private UserEntityDTO createIfNotExist (UserEntityDTO userEntityDTO){
+    private UserEntityDTO createIfNotExist(UserEntityDTO userEntityDTO) throws MessagingException {
+        Optional<UserEntity> existingUser = userRepository.findByUsername(userEntityDTO.getUsername());
 
-        UserEntity userEntity= UserEntity.builder()
+        if (existingUser.isPresent()) {
+            throw new ConflictException("Usuario " + userEntityDTO.getUsername() + " ya existe");
+        }
+
+        String verificationToken = UUID.randomUUID().toString();
+        UserEntity userEntity = UserEntity.builder()
                 .firstName(userEntityDTO.getFirstName())
                 .lastName(userEntityDTO.getLastName())
                 .username(userEntityDTO.getUsername())
                 .password(passwordEncoder.encode(userEntityDTO.getPassword()))
                 .role(ERole.valueOf(userEntityDTO.getRole().name()))
+                .verificationToken(verificationToken)
+                .isVerified(false)
                 .build();
 
-            if (!userRepository.existsById(1L)) {
-                userRepository.save(userEntity);
-                return userEntityDTO;
-            } else {
-                if (userRepository.findByUsername(userEntityDTO.getUsername()).isPresent()) {
-                    throw new ConflictException("Usuario " + userEntityDTO.getUsername() + " ya existe");
-                } else {
-                    userRepository.save(userEntity);
-                    return userEntityDTO;
-                }
-            }
+        userRepository.save(userEntity);
 
+        String verificationLink = "http://localhost:8080/user/auth/verify?token=" + verificationToken;
+        emailService.sendVerificationEmail(userEntityDTO.getUsername(), verificationLink);
+
+        return userEntityDTO;
+    }
+
+    public boolean verifyAccount(String verificationToken) {
+        Optional<UserEntity> optionalUser = userRepository.findByVerificationToken(verificationToken);
+
+        if (optionalUser.isPresent()) {
+            UserEntity user = optionalUser.get();
+            user.setVerified(true);
+            user.setVerificationToken(null);
+            userRepository.save(user);
+            return true;
+        }
+
+        return false;
     }
 
 }

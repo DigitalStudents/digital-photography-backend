@@ -1,6 +1,7 @@
 package Backend.User.Model;
 
 import Backend.User.Crud.UserRepository;
+import com.amazonaws.services.kms.model.DisabledException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,9 +23,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
         UserEntity userEntity = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("El usuario " + username + " no existe."));
+
+        if (!userEntity.isVerified()) {
+            throw new DisabledException("Usuario no verificado. Por favor, verifica tu correo electrónico.");
+        }
 
         Collection<? extends GrantedAuthority> authorities = Stream.of(new SimpleGrantedAuthority((userEntity.getRole().name())))
                 .map(role -> new SimpleGrantedAuthority("ROLE_".concat(role.getAuthority())))

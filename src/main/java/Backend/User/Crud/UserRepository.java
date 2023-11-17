@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByUsername(String username);
+    Optional<UserEntity> findByVerificationToken(String verificationToken);
 
 //    @Query("INSERT INTO user_roles (user_id, role_id) VALUES (:userId, :roleId)")
 //    void linkUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
