@@ -10,4 +10,5 @@ public interface ReservationService {
     Reservation getReservation(Long id);
     List<ReservationDTO> getAllReservationsDTO();
     List<Reservation> getOverlappingReservations(Long productId, Date startDate, Date endDate);
+    List<ReservationDTO> getAllReservationsForUser(Long userId);
 }

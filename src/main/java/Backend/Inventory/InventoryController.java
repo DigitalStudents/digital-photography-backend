@@ -1,6 +1,7 @@
 package Backend.Inventory;
 
 import Backend.Producto.Producto;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ public class InventoryController {
     private InventoryService inventoryService;
 
     @PostMapping("/{productId}")
+    @Operation(summary = "Agrega un producto al inventario")
     public void addProductToInventory(@PathVariable Long productId, @RequestBody Map<String, Integer> request) {
         int initialStock = request.get("initialStock");
         Producto product = new Producto();
@@ -23,6 +25,7 @@ public class InventoryController {
     }
 
     @GetMapping("/{productId}")
+    @Operation(summary = "Trae el Stock de un producto")
     public int getStockForProduct(@PathVariable Long productId) {
         Producto product = new Producto();
         product.setId(productId);
@@ -30,6 +33,7 @@ public class InventoryController {
     }
 
     @PutMapping("/{productId}")
+    @Operation(summary = "Modifica el Stock de un producto")
     public void updateStockForProduct(@PathVariable Long productId, @RequestParam int newStock) {
         Producto product = new Producto();
         product.setId(productId);
@@ -37,6 +41,7 @@ public class InventoryController {
     }
 
     @DeleteMapping("/{productId}")
+    @Operation(summary = "Decrementar el Stock de un producto")
     public void decreaseStockForProduct(@PathVariable Long productId, @RequestParam int quantity) {
         Producto product = new Producto();
         product.setId(productId);

@@ -1,5 +1,7 @@
 package Backend.Reservation;
 
+import Backend.Producto.Producto;
+import Backend.Producto.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,9 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Autowired
     private ReservationRepository reservationRepository;
+
+    @Autowired
+    private ProductoRepository productoRepository;
 
     @Override
     public void createReservation(Reservation reservation) {
@@ -48,12 +53,37 @@ public class ReservationServiceImpl implements ReservationService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<ReservationDTO> getAllReservationsForUser(Long userId) {
+        List<Reservation> reservations = reservationRepository.findByUser_Id(userId);
+        return reservations.stream()
+                .map(this::convertEntityToDTOWithProductDetails)
+                .collect(Collectors.toList());
+    }
+
+    private ReservationDTO convertEntityToDTOWithProductDetails(Reservation reservation) {
+        Producto product = productoRepository.findById(reservation.getProducto().getId()).orElse(null);
+        if (product == null) {
+            throw new RuntimeException("Product not found for reservation id: " + reservation.getId());
+        }
+
+        return new ReservationDTO(
+                reservation.getId(),
+                reservation.getStartDate(),
+                reservation.getEndDate(),
+                reservation.getProducto().getId(),
+                reservation.getProducto().getNombre(),
+                reservation.getUser().getId()
+        );
+    }
+
     private ReservationDTO convertEntityToDTO(Reservation reservation) {
         return new ReservationDTO(
                 reservation.getId(),
                 reservation.getStartDate(),
                 reservation.getEndDate(),
                 reservation.getProducto().getId(),
+                reservation.getProducto().getNombre(),
                 reservation.getUser().getId()
         );
     }

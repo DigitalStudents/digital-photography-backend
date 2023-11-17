@@ -1,5 +1,6 @@
 package Backend.Email;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ public class EmailTestController {
     private EmailTestService emailTestService;
 
     @PostMapping("/send-test-email")
+    @Operation(summary = "Te envía un email de prueba")
     public ResponseEntity<String> sendTestEmail(@RequestParam String to) {
         try {
             emailTestService.sendTestEmail(to);

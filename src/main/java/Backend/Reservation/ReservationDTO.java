@@ -15,6 +15,7 @@ public class ReservationDTO {
     private Date startDate;
     private Date endDate;
     private Long productId;
+    private String productName;
     private Long userId;
 
 }

@@ -16,4 +16,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findOverlappingReservations(@Param("productId") Long productId,
                                                   @Param("startDate") Date startDate,
                                                   @Param("endDate") Date endDate);
+
+    List<Reservation> findByUser_Id(Long userId);
 }
