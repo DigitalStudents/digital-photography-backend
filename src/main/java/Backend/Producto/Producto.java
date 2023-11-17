@@ -4,12 +4,14 @@ package Backend.Producto;
 import Backend.Caracteristicas.Caracteristica;
 import Backend.Categorias.Categoria;
 import Backend.Inventory.Inventory;
+import Backend.Reservation.Reservation;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -62,6 +64,11 @@ public class Producto{
     @OneToOne(mappedBy = "producto")
     private Inventory inventory;
     private String descripcion;
+
+
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
+    private List<Reservation> reservations;
+
     private boolean deleted = false;
 
     private static final String S3_BUCKET_NAME ="1023c04-grupo4";

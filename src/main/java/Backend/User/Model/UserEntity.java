@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import Backend.Reservation.Reservation;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -36,4 +39,8 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     private ERole role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Reservation> reservations;
+
 }
