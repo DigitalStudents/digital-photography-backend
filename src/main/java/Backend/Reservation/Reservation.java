@@ -39,4 +39,22 @@ public class Reservation {
     @Column(name = "end_date")
     private Date endDate;
 
+    @Column(name = "total_price")
+    private double totalPrice;
+
+
+    public double calculateTotalPrice() {
+        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());
+        long diffInDays = diffInMillies / (24 * 60 * 60 * 1000);
+
+        double precio = producto.getPrecio(); // Debugging statement
+
+        double calculatedTotalPrice = diffInDays * precio;
+
+        System.out.println("Debug: Precio: " + precio);
+        System.out.println("Debug: Diff in Days: " + diffInDays);
+        System.out.println("Debug: Calculated Total Price: " + calculatedTotalPrice);
+
+        return calculatedTotalPrice;
+    }
 }

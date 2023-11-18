@@ -1,6 +1,7 @@
 package Backend.Reservation;
 
 import Backend.Producto.Producto;
+import Backend.Producto.ProductoRepository;
 import Backend.User.Model.UserEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,25 +18,31 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
+    @Autowired
+    private ProductoRepository productoRepository;
+
     @PostMapping
     @Operation(summary = "Crea una Reserva")
     public void createReservation(
             @RequestParam(name = "productId") Long productId,
             @RequestParam(name = "userId") Long userId,
-            @RequestParam(name = "startDate") @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate,
-            @RequestParam(name = "endDate") @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate) {
+            @RequestParam(name = "startDate") @DateTimeFormat(pattern = "mm-dd-yyyy") Date startDate,
+            @RequestParam(name = "endDate") @DateTimeFormat(pattern = "mm-dd-yyyy") Date endDate) {
+
+        Producto producto = productoRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Producto not found with id: " + productId));
 
         Reservation reservation = new Reservation();
         reservation.setStartDate(startDate);
         reservation.setEndDate(endDate);
-
-        Producto producto = new Producto();
-        producto.setId(productId);
-        reservation.setProducto(producto);
+        reservation.setProducto(producto); // Set the fetched Producto
 
         UserEntity userEntity = new UserEntity();
         userEntity.setId(userId);
         reservation.setUser(userEntity);
+
+        double totalPrice = reservation.calculateTotalPrice();
+        reservation.setTotalPrice(totalPrice);
 
         reservationService.createReservation(reservation);
     }

@@ -17,5 +17,6 @@ public class ReservationDTO {
     private Long productId;
     private String productName;
     private Long userId;
+    private double totalPrice;
 
 }

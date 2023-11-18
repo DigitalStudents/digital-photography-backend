@@ -73,7 +73,8 @@ public class ReservationServiceImpl implements ReservationService {
                 reservation.getEndDate(),
                 reservation.getProducto().getId(),
                 reservation.getProducto().getNombre(),
-                reservation.getUser().getId()
+                reservation.getUser().getId(),
+                reservation.getTotalPrice()
         );
     }
 
@@ -84,7 +85,8 @@ public class ReservationServiceImpl implements ReservationService {
                 reservation.getEndDate(),
                 reservation.getProducto().getId(),
                 reservation.getProducto().getNombre(),
-                reservation.getUser().getId()
+                reservation.getUser().getId(),
+                reservation.getTotalPrice()
         );
     }
 
