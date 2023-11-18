@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
 //    public final static String[] PUBLIC_REQUEST_MATCHERS = {"v1/user/**","v1/auth/**","api-docs/**", "swagger-ui/**","v1/user/createUser" };
@@ -33,11 +35,11 @@ public class SecurityConfig {
                     auth.requestMatchers("/user/crud/register").permitAll();
                     auth.requestMatchers("/send-test-email").permitAll();
                     auth.requestMatchers(HttpMethod.GET,"/v1/**").permitAll();
+                    auth.requestMatchers("/v1/**").permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("ADMIN");
                     auth.requestMatchers(HttpMethod.POST, "/user/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.PUT, "/user/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN");
-                    auth.requestMatchers(HttpMethod.POST, "/v1/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.PUT, "/v1/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.DELETE, "/v1/**").hasRole("ADMIN");
                     auth.anyRequest().authenticated();
@@ -58,4 +60,9 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
-    }}
+    }
+
+
+
+
+}
