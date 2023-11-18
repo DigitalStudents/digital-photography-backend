@@ -35,7 +35,7 @@ public class ReservationController {
         Reservation reservation = new Reservation();
         reservation.setStartDate(startDate);
         reservation.setEndDate(endDate);
-        reservation.setProducto(producto); // Set the fetched Producto
+        reservation.setProducto(producto);
 
         UserEntity userEntity = new UserEntity();
         userEntity.setId(userId);

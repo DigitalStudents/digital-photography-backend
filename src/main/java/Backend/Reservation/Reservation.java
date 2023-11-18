@@ -47,14 +47,8 @@ public class Reservation {
         long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());
         long diffInDays = diffInMillies / (24 * 60 * 60 * 1000);
 
-        double precio = producto.getPrecio(); // Debugging statement
+        double precio = producto.getPrecio();
 
-        double calculatedTotalPrice = diffInDays * precio;
-
-        System.out.println("Debug: Precio: " + precio);
-        System.out.println("Debug: Diff in Days: " + diffInDays);
-        System.out.println("Debug: Calculated Total Price: " + calculatedTotalPrice);
-
-        return calculatedTotalPrice;
+        return diffInDays * precio;
     }
 }
