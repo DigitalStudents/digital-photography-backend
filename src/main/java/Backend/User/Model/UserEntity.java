@@ -1,4 +1,5 @@
 package Backend.User.Model;
+import Backend.Producto.Producto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,7 +10,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import Backend.Reservation.Reservation;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -42,5 +46,12 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_favorite_products",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private List<Producto> favoriteProducts = new ArrayList<>();
 
 }
