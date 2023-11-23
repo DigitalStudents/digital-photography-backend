@@ -26,6 +26,7 @@ public class UserEntityDTO {
     @NotBlank
     private String password;
 
+
     @Enumerated(EnumType.STRING)
     private ERole role;
 }

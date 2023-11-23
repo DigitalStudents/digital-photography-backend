@@ -15,7 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-//    public final static String[] PUBLIC_REQUEST_MATCHERS = {"v1/user/**","v1/auth/**","api-docs/**", "swagger-ui/**","v1/user/createUser" };
     @Autowired
     JwtAuthorizationFilter authorizationFilter;
 

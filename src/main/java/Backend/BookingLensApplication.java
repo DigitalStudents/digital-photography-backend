@@ -25,55 +25,28 @@ public class BookingLensApplication {
 	}
 
 
-//	@Autowired
-//	PasswordEncoder passwordEncoder;
-//
-//	@Autowired
-//	UserRepository userRepository;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
-//	@Bean
-//	CommandLineRunner init(){
-//		return args -> {
-//
-//			UserEntity userEntity1 = UserEntity.builder()
-//					.firstName("henry")
-//					.lastName("martinez")
-//					.username("henry@mail")
-//					.password(passwordEncoder.encode("1234"))
-//					.role(ERole.ADMIN)
-//					.build();
-//
-//			UserEntity userEntity2 = UserEntity.builder()
-//					.firstName("anyi")
-//					.lastName("rojas")
-//					.username("anyi@mail.com")
-//					.password(passwordEncoder.encode("1234"))
-//					.role(ERole.USER)
-//					.build();
-//
-//			UserEntity userEntity3 = UserEntity.builder()
-//					.firstName("julian")
-//					.lastName("perez")
-//					.username("julian@mail.com")
-//					.password(passwordEncoder.encode("1234"))
-//					.role(ERole.USER)
-//					.build();
-//
-//			UserEntity userEntity4 = UserEntity.builder()
-//					.firstName("carmen ")
-//					.lastName("cristo")
-//					.username("anyi@mail.com")
-//					.password(passwordEncoder.encode("1234"))
-//					.role(ERole.USER)
-//					.build();
-//
-//			userRepository.save(userEntity1);
-//			userRepository.save(userEntity2);
-//			userRepository.save(userEntity3);
-//			userRepository.save(userEntity4);
-//
-//		};
-//	}
+	@Autowired
+	UserRepository userRepository;
+
+	@Bean
+	CommandLineRunner init(){
+		return args -> {
+
+			UserEntity userEntity1 = UserEntity.builder()
+					.firstName("admin")
+					.lastName("admin")
+					.username("admin@mail")
+					.password(passwordEncoder.encode("password"))
+					.role(ERole.ADMIN)
+					.build();
+
+			userRepository.save(userEntity1);
+
+		};
+	}
 
 
 	private SecurityScheme createAPIKeyScheme() {
