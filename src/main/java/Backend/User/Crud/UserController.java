@@ -23,11 +23,6 @@ public class UserController {
         return new ResponseEntity<>(iUserService.register(userEntityDTO),HttpStatus.OK);
     }
 
-    @PostMapping("/createUser")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserEntityDTO userEntityDTO) {
-       return new ResponseEntity<>(iUserService.create(userEntityDTO), HttpStatus.OK);
-    }
-
     @PutMapping("/roleUpdate")
     public ResponseEntity<?> roleUpdate(@Valid @RequestBody List<RoleUpdate> roleUpdate) {
         return new ResponseEntity<>(iUserService.roleUpdate(roleUpdate), HttpStatus.OK);

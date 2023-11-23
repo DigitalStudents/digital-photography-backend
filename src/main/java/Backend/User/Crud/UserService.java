@@ -32,12 +32,6 @@ public class UserService implements IUserService {
         createIfNotExist(userEntityDTO);
         return "usuario guardado con exito";
     }
-
-    @Override
-    public UserEntityDTO create(UserEntityDTO userEntityDTO) {
-        return createIfNotExist(userEntityDTO);
-    }
-
     @Override
     public String deleteById(Long id) {
         if(userRepository.existsById(id)){

@@ -9,7 +9,6 @@ import java.util.List;
 public interface IUserService {
 
     String register (UserEntityDTO userEntityDTO);
-    UserEntityDTO create(UserEntityDTO userEntityDTO);
 
     String deleteById(Long id);
 
