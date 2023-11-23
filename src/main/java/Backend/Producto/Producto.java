@@ -4,6 +4,8 @@ package Backend.Producto;
 import Backend.Caracteristicas.Caracteristica;
 import Backend.Categorias.Categoria;
 import Backend.Inventory.Inventory;
+import Backend.Reservation.Reservation;
+import Backend.User.Model.UserEntity;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
@@ -18,8 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 @Data
@@ -37,6 +38,7 @@ public class Producto{
     @Column(unique = true)
     private String nombre;
     private double precio;
+    private String descripcion;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "producto_imagenes", joinColumns = @JoinColumn(name = "product_id"))
@@ -58,10 +60,17 @@ public class Producto{
             inverseJoinColumns = @JoinColumn(name = "categoria_id"))
     private List<Categoria> categorias;
 
+    @ManyToMany(mappedBy = "favoriteProducts")
+    @JsonIgnore
+    private List<UserEntity> favoritedByUsers = new ArrayList<>();
+
     @JsonIgnore
     @OneToOne(mappedBy = "producto")
     private Inventory inventory;
-    private String descripcion;
+
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
+    private List<Reservation> reservations;
+
     private boolean deleted = false;
 
     private static final String S3_BUCKET_NAME ="1023c04-grupo4";

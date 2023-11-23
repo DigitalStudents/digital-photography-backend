@@ -1,6 +1,7 @@
 package Backend.User.Auth;
 import Backend.User.Crud.UserService;
 import Backend.User.dto.UserEntityDTO;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/verify")
+    @Operation(summary = "Valida la cuenta usando el token generado en registro")
     public ResponseEntity<String> verifyAccount(@RequestParam("token") String verificationToken) {
         boolean isTokenValid = userService.verifyAccount(verificationToken);
 

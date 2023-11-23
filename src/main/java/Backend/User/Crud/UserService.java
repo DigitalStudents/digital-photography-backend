@@ -1,4 +1,6 @@
 package Backend.User.Crud;
+import Backend.Producto.Producto;
+import Backend.Producto.ProductoRepository;
 import Backend.Security.JwtUtils;
 import Backend.User.Model.ERole;
 import Backend.User.Model.UserEntity;
@@ -8,14 +10,13 @@ import Backend.User.dto.UserEntityDTO;
 import Backend.User.dto.UserIdentityDTO;
 import Backend.exceptions.BadRequestException;
 import Backend.exceptions.ConflictException;
+import com.amazonaws.services.kms.model.NotFoundException;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +32,8 @@ public class UserService implements IUserService {
 
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private ProductoRepository productoRepository;
 
 
     @Override
@@ -155,5 +158,38 @@ public class UserService implements IUserService {
         return false;
     }
 
+    @Override
+    public void addToFavorites(Long userId, Long productId) {
+        Optional<UserEntity> userOptional = userRepository.findById(userId);
+        Optional<Producto> productOptional = productoRepository.findById(productId);
+
+        if (userOptional.isPresent() && productOptional.isPresent()) {
+            UserEntity user = userOptional.get();
+            Producto product = productOptional.get();
+
+            user.getFavoriteProducts().add(product);
+            product.getFavoritedByUsers().add(user);
+
+            userRepository.save(user);
+            productoRepository.save(product);
+        } else {
+            throw new NotFoundException("Usario o Producto no encontrado");
+        }
+    }
+
+    @Override
+    public List<Producto> getFavoriteProducts(Long userId) {
+        Optional<UserEntity> userOptional = userRepository.findById(userId);
+        return userOptional.map(UserEntity::getFavoriteProducts).orElse(new ArrayList<>());
+    }
+
+    @Override
+    public void removeFavoriteProduct(Long userId, Long productId) {
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Usario no encontrado"));
+        Producto product = productoRepository.findById(productId).orElseThrow(() -> new NotFoundException("Producto no encontrado"));
+
+        user.getFavoriteProducts().remove(product);
+        userRepository.save(user);
+    }
 }
 
