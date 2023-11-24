@@ -5,6 +5,9 @@ import Backend.Producto.ProductoRepository;
 import Backend.Security.JwtUtils;
 import Backend.User.Crud.UserRepository;
 import Backend.User.Model.UserEntity;
+import Backend.exceptions.ProductNotFoundException;
+import Backend.exceptions.ReservationNotFoundException;
+import Backend.exceptions.UserNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,15 +93,34 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Trae una reservar por su Id")
-    public Reservation getReservation(@PathVariable Long id) {
-        return reservationService.getReservation(id);
+    @Operation(summary = "Trae una reserva por su Id")
+    public ResponseEntity<Reservation> getReservation(@PathVariable Long id) {
+        try {
+            Reservation reservation = reservationService.getReservation(id);
+            return ResponseEntity.ok(reservation);
+        } catch (ReservationNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping
     @Operation(summary = "Trae todas las Reservas")
     public List<ReservationDTO> getAllReservationsDTO() {
         return reservationService.getAllReservationsDTO();
+    }
+
+    @GetMapping("/product/{productId}")
+    @Operation(summary = "Trae todas las reservas de un producto")
+    public ResponseEntity<List<ReservationDTO>> getAllReservationsForProduct(@PathVariable Long productId) {
+        try {
+            List<ReservationDTO> reservations = reservationService.getAllReservationsForProduct(productId);
+            if (reservations.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(reservations);
+        } catch (ProductNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -108,7 +130,15 @@ public class ReservationController {
     }
     @GetMapping("/user/{userId}")
     @Operation(summary = "Trae todas las reservas de un usuario")
-    public List<ReservationDTO> getAllReservationsForUser(@PathVariable Long userId) {
-        return reservationService.getAllReservationsForUser(userId);
+    public ResponseEntity<List<ReservationDTO>> getAllReservationsForUser(@PathVariable Long userId) {
+        try {
+            List<ReservationDTO> reservations = reservationService.getAllReservationsForUser(userId);
+            if (reservations.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(reservations);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
