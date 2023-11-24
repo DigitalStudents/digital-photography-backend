@@ -2,11 +2,18 @@ package Backend.Reservation;
 
 import Backend.Producto.Producto;
 import Backend.Producto.ProductoRepository;
+import Backend.Security.JwtUtils;
+import Backend.User.Crud.UserRepository;
 import Backend.User.Model.UserEntity;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.jsonwebtoken.Claims;
+
 
 import java.util.Date;
 import java.util.List;
@@ -21,30 +28,65 @@ public class ReservationController {
     @Autowired
     private ProductoRepository productoRepository;
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @PostMapping
     @Operation(summary = "Crea una Reserva")
-    public void createReservation(
-            @RequestParam(name = "productId") Long productId,
-            @RequestParam(name = "userId") Long userId,
-            @RequestParam(name = "startDate") @DateTimeFormat(pattern = "mm-dd-yyyy") Date startDate,
-            @RequestParam(name = "endDate") @DateTimeFormat(pattern = "mm-dd-yyyy") Date endDate) {
+    public ResponseEntity<String> createReservation(
+            @RequestBody ReservationRequest reservationRequest,
+            HttpServletRequest request) {
 
-        Producto producto = productoRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Producto not found with id: " + productId));
+        try {
+            String username = getUsernameFromToken(request.getHeader("Authorization"));
 
-        Reservation reservation = new Reservation();
-        reservation.setStartDate(startDate);
-        reservation.setEndDate(endDate);
-        reservation.setProducto(producto);
+            Producto producto = productoRepository.findById(reservationRequest.getProductId())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + reservationRequest.getProductId()));
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(userId);
-        reservation.setUser(userEntity);
+            UserEntity userEntity = userRepository.findByUsername(username)
+                    .orElseGet(() -> {
 
-        double totalPrice = reservation.calculateTotalPrice();
-        reservation.setTotalPrice(totalPrice);
+                        UserEntity newUser = new UserEntity();
+                        newUser.setUsername(username);
+                        userRepository.save(newUser);
+                        return newUser;
+                    });
 
-        reservationService.createReservation(reservation);
+            Reservation reservation = new Reservation();
+            reservation.setStartDate(reservationRequest.getStartDate());
+            reservation.setEndDate(reservationRequest.getEndDate());
+            reservation.setProducto(producto);
+            reservation.setUser(userEntity);
+
+            double totalPrice = reservation.calculateTotalPrice();
+            reservation.setTotalPrice(totalPrice);
+
+            reservationService.createReservation(reservation);
+
+            return ResponseEntity.ok("Reserva creada exitosamente");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ha ocurrido un error al crearse la reserva");
+        }
+    }
+
+    private String getUsernameFromToken(String tokenHeader) {
+        try {
+            if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
+                String token = tokenHeader.substring(7);
+
+                if (jwtUtils.isTokenValid(token)) {
+                    return jwtUtils.getClaim(token, Claims::getSubject);
+                }
+            }
+            throw new RuntimeException("JWT token no existente o inválido");
+        } catch (Exception e) {
+            throw new RuntimeException("Error extrayendo el UserName del JWT: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
