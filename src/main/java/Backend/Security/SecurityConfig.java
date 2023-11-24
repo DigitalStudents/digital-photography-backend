@@ -36,6 +36,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/send-test-email").permitAll();
                     auth.requestMatchers(HttpMethod.GET,"/v1/**").permitAll();
                     auth.requestMatchers("/v1/**").permitAll();
+                    auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("ADMIN");
                     auth.requestMatchers(HttpMethod.POST, "/user/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.PUT, "/user/**").hasRole("ADMIN");
