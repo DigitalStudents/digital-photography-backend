@@ -37,6 +37,9 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.GET,"/v1/**").permitAll();
 
                     auth.requestMatchers("/v1/**").permitAll();
+
+                    auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+            
                     auth.requestMatchers("/user/**").permitAll();
 
                     auth.anyRequest().authenticated();
