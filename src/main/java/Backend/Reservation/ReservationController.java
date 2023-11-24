@@ -93,13 +93,16 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Trae una reserva por su Id")
-    public ResponseEntity<Reservation> getReservation(@PathVariable Long id) {
+    @Operation(summary = "Trae una reservar por su Id")
+    public ResponseEntity<?> getReservation(@PathVariable Long id) {
         try {
             Reservation reservation = reservationService.getReservation(id);
+            if (reservation == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron reservas con id: " + id);
+            }
             return ResponseEntity.ok(reservation);
-        } catch (ReservationNotFoundException e) {
-            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error trayendo reserva con id: " + id);
         }
     }
 
@@ -111,15 +114,15 @@ public class ReservationController {
 
     @GetMapping("/product/{productId}")
     @Operation(summary = "Trae todas las reservas de un producto")
-    public ResponseEntity<List<ReservationDTO>> getAllReservationsForProduct(@PathVariable Long productId) {
+    public ResponseEntity<?> getAllReservationsForProduct(@PathVariable Long productId) {
         try {
             List<ReservationDTO> reservations = reservationService.getAllReservationsForProduct(productId);
             if (reservations.isEmpty()) {
-                return ResponseEntity.noContent().build();
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El producto con id: " + productId + " No tiene reservas");
             }
             return ResponseEntity.ok(reservations);
         } catch (ProductNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -128,17 +131,18 @@ public class ReservationController {
     public void deleteReservation(@PathVariable Long id) {
         reservationService.deleteReservation(id);
     }
+
     @GetMapping("/user/{userId}")
     @Operation(summary = "Trae todas las reservas de un usuario")
-    public ResponseEntity<List<ReservationDTO>> getAllReservationsForUser(@PathVariable Long userId) {
+    public ResponseEntity<?> getAllReservationsForUser(@PathVariable Long userId) {
         try {
             List<ReservationDTO> reservations = reservationService.getAllReservationsForUser(userId);
             if (reservations.isEmpty()) {
-                return ResponseEntity.noContent().build();
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El usuario con ID: " + userId + "no tiene reservas" );
             }
             return ResponseEntity.ok(reservations);
         } catch (UserNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }

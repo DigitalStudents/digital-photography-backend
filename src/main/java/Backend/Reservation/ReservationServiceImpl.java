@@ -77,7 +77,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<ReservationDTO> getAllReservationsForProduct(Long productId) {
         if (!productoRepository.existsById(productId)) {
-            throw new ProductNotFoundException("Product not found with id: " + productId);
+            throw new ProductNotFoundException("Producto no encontrado con id: " + productId);
         }
         List<Reservation> reservations = reservationRepository.findByProducto_Id(productId);
         return reservations.stream()
