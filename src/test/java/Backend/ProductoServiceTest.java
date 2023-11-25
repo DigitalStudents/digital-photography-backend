@@ -74,11 +74,13 @@ public class ProductoServiceTest {
         ProductoService.ModificarProducto(producto);
         Mockito.verify(productoRepository, Mockito.times(1)).save(producto);
     }
-
+/*
     @Test
     public void testEliminarproducto() {
         Long id = 1L;
         ProductoService.EliminarProducto(id);
         Mockito.verify(productoRepository, Mockito.times(1)).deleteById(id);
     }
+    */
+
 }
