@@ -1,8 +1,5 @@
 package Backend;
 
-import Backend.User.Model.ERole;
-import Backend.User.Model.UserEntity;
-import Backend.User.Crud.UserRepository;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -26,6 +23,7 @@ public class BookingLensApplication {
 		SpringApplication.run(BookingLensApplication.class, args);
 	}
 
+<<<<<<< HEAD
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -88,6 +86,8 @@ public class BookingLensApplication {
 	}
 
 
+=======
+>>>>>>> 1c438e51880c14d65b231a03c7a6ad6380760560
 	private SecurityScheme createAPIKeyScheme() {
 		return new SecurityScheme().type(SecurityScheme.Type.HTTP)
 				.bearerFormat("JWT")

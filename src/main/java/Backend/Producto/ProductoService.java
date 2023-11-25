@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface ProductoService {
 
      void CrearProducto (Producto producto);
-     void uploadImage(Long productId, MultipartFile image) throws IOException;
+     void uploadImages(Long productId, List<MultipartFile> imageFiles) throws IOException;
      Optional<Producto> BuscarProducto(Long id);
      List<Producto> TraerTodos();
 
@@ -21,5 +21,12 @@ public interface ProductoService {
      Page<Producto> Paginados(Pageable pageable);
 
      Page<Producto> BuscarPorNombre(String searchTerm, Pageable pageable);
+
+     List<Producto> filterProductosByCategorias(List<String> categoriaNombres);
+
+     void agregarCaracteristicasAProducto(Long productoId, List<Long> caracteristicaIds);
+
+     void agregarCategoriasAProducto(Long productoId, List<Long> categoriaIds);
+
 
 }
