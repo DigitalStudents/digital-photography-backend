@@ -2,7 +2,7 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ "xxx" ]
+    branches: [ "deploy" ]
 
 jobs:
 
@@ -12,6 +12,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Build
+        run: mvn package
       - name: Login Dockerhub
         env:
           DOCKER_USERNAME: nicolaspineda255
