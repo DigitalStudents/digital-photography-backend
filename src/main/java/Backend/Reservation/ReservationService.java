@@ -13,4 +13,6 @@ public interface ReservationService {
     List<ReservationDTO> getAllReservationsForUser(Long userId);
 
     List<ReservationDTO> getAllReservationsForProduct(Long productId);
+    boolean findByUser_IdAndProducto_Id(Long userId, Long productId);
+
 }

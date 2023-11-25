@@ -4,6 +4,7 @@ package Backend.Producto;
 import Backend.Caracteristicas.Caracteristica;
 import Backend.Categorias.Categoria;
 import Backend.Inventory.Inventory;
+import Backend.ProductRating.ProductRating;
 import Backend.Reservation.Reservation;
 import Backend.User.Model.UserEntity;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
@@ -70,6 +71,9 @@ public class Producto{
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductRating> ratings = new ArrayList<>();
 
     private boolean deleted = false;
 
