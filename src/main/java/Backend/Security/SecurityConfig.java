@@ -29,6 +29,9 @@ public class SecurityConfig {
                     auth.requestMatchers("/api-docs/**", "/swagger-ui/**").permitAll();
                     auth.requestMatchers("/user/auth/login").permitAll();
                     auth.requestMatchers("/user/crud/register").permitAll();
+                    auth.requestMatchers("/user/crud/users").permitAll();
+//                    auth.requestMatchers("/user/crud/roleUpdate").permitAll();
+//                    auth.requestMatchers("/user/crud/deleteUser").permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("ADMIN");
                     auth.requestMatchers(HttpMethod.POST, "/user/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.PUT, "/user/**").hasRole("ADMIN");

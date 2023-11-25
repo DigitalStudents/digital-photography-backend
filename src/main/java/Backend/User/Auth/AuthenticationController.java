@@ -19,7 +19,9 @@ public class AuthenticationController {
         return new ResponseEntity<>(iAuthenticationService.login(authenticationRequest),HttpStatus.OK);
     }
 
-
-
+    @GetMapping("/hola")
+    public ResponseEntity<String> hola (){
+        return new ResponseEntity<>("hola spring", HttpStatus.OK);
+    }
 
 }
