@@ -14,7 +14,7 @@
 	<name>BookingLens</name>
 	<description>PI Equipo 4</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>11</java.version>
 	</properties>
 	<dependencies>
 
