@@ -1,5 +1,6 @@
 package Backend.User.Crud;
 import Backend.Producto.Producto;
+import Backend.Security.JwtUtils;
 import Backend.User.dto.RoleUpdate;
 import Backend.User.dto.UserEntityDTO;
 import Backend.User.dto.UserIdentityDTO;
@@ -19,6 +20,9 @@ public class UserController {
 
     @Autowired
     private IUserService iUserService;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @PostMapping("/register")
     public ResponseEntity<String>register(@Valid @RequestBody UserEntityDTO userEntityDTO) throws MessagingException {
@@ -51,10 +55,13 @@ public class UserController {
         return new ResponseEntity<>(iUserService.findByid(id),HttpStatus.OK);
     }
 
-    @PostMapping("/{userId}/agregarFavorito/{productId}")
-    public ResponseEntity<?> addToFavorites(@PathVariable Long userId, @PathVariable Long productId) {
+    @PostMapping("/agregarFavorito/{productId}")
+    public ResponseEntity<?> addToFavorites(
+            @PathVariable Long productId,
+            @RequestHeader("Authorization") String tokenHeader) {
+        Long userId = getUserIdFromToken(tokenHeader);
         iUserService.addToFavorites(userId, productId);
-        return new ResponseEntity<>("Producto " + productId +" agregado a favoritos", HttpStatus.OK);
+        return new ResponseEntity<>("Producto " + productId + " agregado a favoritos", HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/productosFavoritos")
@@ -63,9 +70,27 @@ public class UserController {
         return new ResponseEntity<>(favoriteProducts, HttpStatus.OK);
     }
 
-    @PostMapping("/removerFavorito")
-    public ResponseEntity<?> removeFavorite(@RequestParam Long userId, @RequestParam Long productId) {
+    @PostMapping("/removerFavorito/{productId}")
+    public ResponseEntity<?> removeFavorite(
+            @PathVariable Long productId,
+            @RequestHeader("Authorization") String tokenHeader) {
+        Long userId = getUserIdFromToken(tokenHeader);
         iUserService.removeFavoriteProduct(userId, productId);
         return new ResponseEntity<>("Producto " + productId + " removido de favoritos", HttpStatus.OK);
+    }
+
+    private Long getUserIdFromToken(String tokenHeader) {
+        try {
+            if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
+                String token = tokenHeader.substring(7);
+
+                if (jwtUtils.isTokenValid(token)) {
+                    return jwtUtils.getClaim(token, claims -> claims.get("userId", Long.class));
+                }
+            }
+            throw new RuntimeException("JWT token no existente o inválido");
+        } catch (Exception e) {
+            throw new RuntimeException("Error extrayendo el UserID del JWT: " + e.getMessage());
+        }
     }
 }
