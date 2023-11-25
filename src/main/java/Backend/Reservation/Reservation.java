@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 import java.util.Date;
 
@@ -26,17 +28,19 @@ public class Reservation {
     @JsonIgnore
     private Producto producto;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private UserEntity user;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date startDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_date")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date endDate;
 
     @Column(name = "total_price")
