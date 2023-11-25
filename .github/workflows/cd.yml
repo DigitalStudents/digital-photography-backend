@@ -7,8 +7,8 @@ on:
 jobs:
 
   build:
-
-    runs-on: self-hosted
+    runs-on:
+      group: Default
 
     steps:
       - name: Pull Docker image
