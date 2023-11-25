@@ -1,0 +1,41 @@
+name: CI-CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - deploy
+
+jobs:
+
+  Build Project:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
+      - name: Build
+        run: mvn package
+      - name: Login Dockerhub
+        env:
+          DOCKER_USERNAME: nicolaspineda255
+          DOCKER_PASSWORD: Nico-1019
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+      - name: Build the Docker image
+        run: docker build -t nicolaspineda255/digital-photography-backend .
+      - name: Push to Dockerhub
+        run: docker push nicolaspineda255/digital-photography-backend:latest
+
+    Deploy Project:
+      runs-on:
+        group: Default
+      steps:
+        - name: Pull Docker image
+          run: sudo docker pull nicolaspineda255/digital-photography-backend:latest
+        - name: Delete Old docker container
+          run: sudo docker rm -f digital-photography-backend-container || true
+        - name: Run Docker Container
+          run: sudo docker run -d -p 8080:8080 --name digital-photography-backend-container nicolaspineda255/digital-photography-backend
