@@ -21,4 +21,4 @@ jobs:
       - name: Build the Docker image
         run: docker build -t digitalstudents/digital-photography-backend .
       - name: Push to Dockerhub
-        run: docker push digitalstudents/digital-photography-backend:latest
+        run: docker push nicolaspineda255/digital-photography-backend:latest
