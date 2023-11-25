@@ -30,7 +30,7 @@ jobs:
       - name: Push to Dockerhub
         run: docker push nicolaspineda255/digital-photography-backend:latest
 
-    deploy_project:
+  deploy_project:
       name: Deploy Project
       needs: build_project
       runs-on:
