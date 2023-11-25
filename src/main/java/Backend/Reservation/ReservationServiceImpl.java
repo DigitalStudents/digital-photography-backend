@@ -36,7 +36,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void updateReservation(Long id, Reservation reservation) {
         if (hasOverlappingReservations(reservation)) {
-            throw new RuntimeException("El producto ya está reservado para la fecha indicada");
+            throw new RuntimeException("Ya hay una reserva del producto dentro de las fechas indicadas");
         }
         reservation.setId(id);
         reservationRepository.save(reservation);

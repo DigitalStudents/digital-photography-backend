@@ -33,6 +33,9 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public void CrearProducto(Producto producto) {
+        if (productoRepository.findByNombreIgnoreCase(producto.getNombre()).isPresent()) {
+            throw new IllegalArgumentException("Ya existe un producto con el mismo nombre.");
+        }
         productoRepository.save(producto);
     }
 
@@ -40,11 +43,13 @@ public class ProductoServiceImpl implements ProductoService {
     @Transactional
     public void uploadImages(Long productId, List<MultipartFile> imageFiles) throws IOException {
         Optional<Producto> optionalProducto = productoRepository.findById(productId);
-        if (optionalProducto.isPresent()) {
-            Producto producto = optionalProducto.get();
-            producto.uploadImagesToS3(imageFiles);
-            productoRepository.save(producto);
+        if (optionalProducto.isEmpty()) {
+            throw new IllegalArgumentException("Producto con ID " + productId + " no existe.");
         }
+
+        Producto producto = optionalProducto.get();
+        producto.uploadImagesToS3(imageFiles);
+        productoRepository.save(producto);
     }
 
     @Override
