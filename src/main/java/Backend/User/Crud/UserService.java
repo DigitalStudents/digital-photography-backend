@@ -41,15 +41,14 @@ public class UserService implements IUserService {
         createIfNotExist(userEntityDTO);
         return "Se ha enviado un correo de verificación a su Email. Por favor verifique su bandeja de entrada";
     }
-<<<<<<< HEAD
-=======
+
 
     @Override
     public UserEntityDTO create(UserEntityDTO userEntityDTO) throws MessagingException {
         return createIfNotExist(userEntityDTO);
     }
 
->>>>>>> 1c438e51880c14d65b231a03c7a6ad6380760560
+
     @Override
     public String deleteById(Long id) {
         if(userRepository.existsById(id)){

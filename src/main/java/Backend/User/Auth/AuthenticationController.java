@@ -24,12 +24,6 @@ public class AuthenticationController {
         return new ResponseEntity<>(iAuthenticationService.login(authenticationRequest),HttpStatus.OK);
     }
 
-<<<<<<< HEAD
-    @GetMapping("/hola")
-    public ResponseEntity<String> hola (){
-        return new ResponseEntity<>("hola spring", HttpStatus.OK);
-    }
-=======
     @GetMapping("/verify")
     @Operation(summary = "Valida la cuenta usando el token generado en registro")
     public ResponseEntity<String> verifyAccount(@RequestParam("token") String verificationToken) {
@@ -42,6 +36,5 @@ public class AuthenticationController {
         }
     }
 
->>>>>>> 1c438e51880c14d65b231a03c7a6ad6380760560
 
 }

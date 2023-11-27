@@ -32,7 +32,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/api-docs/**", "/swagger-ui/**").permitAll();
                     auth.requestMatchers("/user/auth/login").permitAll();
                     auth.requestMatchers("/user/crud/register").permitAll();
-<<<<<<< HEAD
+
                     auth.requestMatchers("/user/crud/users").permitAll();
 //                    auth.requestMatchers("/user/crud/roleUpdate").permitAll();
 //                    auth.requestMatchers("/user/crud/deleteUser").permitAll();
@@ -40,7 +40,7 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.POST, "/user/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.PUT, "/user/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN");
-=======
+
                     auth.requestMatchers("/send-test-email").permitAll();
                     auth.requestMatchers(HttpMethod.GET,"/v1/**").permitAll();
 
@@ -50,7 +50,7 @@ public class SecurityConfig {
             
                     auth.requestMatchers("/user/**").permitAll();
 
->>>>>>> 1c438e51880c14d65b231a03c7a6ad6380760560
+
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {

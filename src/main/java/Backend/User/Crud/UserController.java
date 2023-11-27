@@ -26,14 +26,12 @@ public class UserController {
         return new ResponseEntity<>(iUserService.register(userEntityDTO),HttpStatus.OK);
     }
 
-<<<<<<< HEAD
-=======
     @PostMapping("/createUser")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserEntityDTO userEntityDTO) throws MessagingException {
        return new ResponseEntity<>(iUserService.create(userEntityDTO), HttpStatus.OK);
     }
 
->>>>>>> 1c438e51880c14d65b231a03c7a6ad6380760560
+
     @PutMapping("/roleUpdate")
     public ResponseEntity<?> roleUpdate(@Valid @RequestBody List<RoleUpdate> roleUpdate) {
         return new ResponseEntity<>(iUserService.roleUpdate(roleUpdate), HttpStatus.OK);

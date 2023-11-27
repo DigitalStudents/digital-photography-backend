@@ -1,5 +1,8 @@
 package Backend;
 
+import Backend.User.Crud.UserRepository;
+import Backend.User.Model.ERole;
+import Backend.User.Model.UserEntity;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -23,7 +26,6 @@ public class BookingLensApplication {
 		SpringApplication.run(BookingLensApplication.class, args);
 	}
 
-<<<<<<< HEAD
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -36,41 +38,41 @@ public class BookingLensApplication {
 		return args -> {
 
 			UserEntity userEntity1 = UserEntity.builder()
-					.firstName("admin")
-					.lastName("admin")
-					.username("admin@mail")
-					.password(passwordEncoder.encode("password"))
+					.firstName("henry")
+					.lastName("martinez")
+					.username("martinezhenry703@gmail.com")
+					.password(passwordEncoder.encode("123"))
 					.role(ERole.ADMIN)
 					.build();
 
 			UserEntity userEntity2 = UserEntity.builder()
-					.firstName("juan")
+					.firstName("fransisco")
 					.lastName("ferias")
-					.username("juan@mail")
-					.password(passwordEncoder.encode("password"))
+					.username("fransiscoilinois@gmail.com")
+					.password(passwordEncoder.encode("123"))
 					.role(ERole.USER)
 					.build();
-
-			UserEntity userEntity3 = UserEntity.builder()
-					.firstName("pedro")
-					.lastName("ramos")
-					.username("pedro@mail")
-					.password(passwordEncoder.encode("password"))
-					.role(ERole.USER)
-					.build();
-
-			UserEntity userEntity4 = UserEntity.builder()
-					.firstName("sergio")
-					.lastName("ramos")
-					.username("sergio@mail")
-					.password(passwordEncoder.encode("password"))
-					.role(ERole.USER)
-					.build();
+//
+//			UserEntity userEntity3 = UserEntity.builder()
+//					.firstName("pedro")
+//					.lastName("ramos")
+//					.username("pedro@mail")
+//					.password(passwordEncoder.encode("password"))
+//					.role(ERole.USER)
+//					.build();
+//
+//			UserEntity userEntity4 = UserEntity.builder()
+//					.firstName("sergio")
+//					.lastName("ramos")
+//					.username("sergio@mail")
+//					.password(passwordEncoder.encode("password"))
+//					.role(ERole.USER)
+//					.build();c
 
 			userRepository.save(userEntity1);
 			userRepository.save(userEntity2);
-			userRepository.save(userEntity3);
-			userRepository.save(userEntity4);
+//			userRepository.save(userEntity3);
+//			userRepository.save(userEntity4);
 
 
 		};
@@ -85,9 +87,6 @@ public class BookingLensApplication {
 		};
 	}
 
-
-=======
->>>>>>> 1c438e51880c14d65b231a03c7a6ad6380760560
 	private SecurityScheme createAPIKeyScheme() {
 		return new SecurityScheme().type(SecurityScheme.Type.HTTP)
 				.bearerFormat("JWT")

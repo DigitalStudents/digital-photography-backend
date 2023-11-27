@@ -11,12 +11,9 @@ import java.util.Set;
 
 public interface IUserService {
 
-<<<<<<< HEAD
-    String register (UserEntityDTO userEntityDTO);
-=======
     String register (UserEntityDTO userEntityDTO) throws MessagingException;
     UserEntityDTO create(UserEntityDTO userEntityDTO) throws MessagingException;
->>>>>>> 1c438e51880c14d65b231a03c7a6ad6380760560
+
 
     String deleteById(Long id);
 
