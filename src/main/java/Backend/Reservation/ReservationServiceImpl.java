@@ -85,6 +85,12 @@ public class ReservationServiceImpl implements ReservationService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public boolean findByUser_IdAndProducto_Id(Long userId, Long productId) {
+        List<Reservation> reservations = reservationRepository.findByUser_IdAndProducto_Id(userId, productId);
+        return !reservations.isEmpty();
+    }
+
     private ReservationDTO convertEntityToDTOWithProductDetails(Reservation reservation) {
         Producto product = productoRepository.findById(reservation.getProducto().getId()).orElse(null);
         if (product == null) {
@@ -127,4 +133,5 @@ public class ReservationServiceImpl implements ReservationService {
         );
         return !overlappingReservations.isEmpty();
     }
+
 }

@@ -1,5 +1,6 @@
 package Backend.Security;
 
+import Backend.User.Model.ERole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,9 +24,11 @@ public class JwtUtils {
 
 
     // Generar token de acceso
-    public String generateAccesToken(String username){
+    public String generateAccessToken(String username, Long userId, ERole role) {
         return Jwts.builder()
                 .setSubject(username)
+                .claim("userId", userId)
+                .claim("role", role.name())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(timeExpiration)))
                 .signWith(getSignatureKey(), SignatureAlgorithm.HS256)

@@ -1,6 +1,10 @@
 package Backend.Producto;
 
+import Backend.ProductRating.ProductRating;
+import Backend.Reservation.ReservationService;
+import Backend.Security.JwtUtils;
 import Backend.exceptions.ProductNotFoundException;
+import com.amazonaws.services.kms.model.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +29,10 @@ public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
+    @Autowired
+    private JwtUtils jwtUtils;
+    @Autowired
+    private ReservationService reservationService;
 
     @Operation(summary = "Crea un Producto")
     @PostMapping
@@ -157,6 +165,61 @@ public class ProductoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error eliminando producto con id: " + id);
+        }
+    }
+
+    @PostMapping("/addRating/{productId}")
+    public ResponseEntity<?> addRating(
+            @PathVariable Long productId,
+            @RequestParam int rating,
+            @RequestParam(required = false) String comment,
+            @RequestHeader("Authorization") String tokenHeader
+    ) {
+        try {
+            Long userId = getUserIdFromToken(tokenHeader);
+            if (!userHasReservedProduct(userId, productId)) {
+                return new ResponseEntity<>("No puedes agregar una calificación a un producto que no has reservado.", HttpStatus.BAD_REQUEST);
+            }
+
+            productoService.addRating(productId, userId, rating, comment);
+            return new ResponseEntity<>("Reseña agregada exitosamente", HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>("Error al agregar la reseña: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private boolean userHasReservedProduct(Long userId, Long productId) {
+        try {
+            return reservationService.findByUser_IdAndProducto_Id(userId, productId);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private Long getUserIdFromToken(String tokenHeader) {
+        try {
+            if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
+                String token = tokenHeader.substring(7);
+
+                if (jwtUtils.isTokenValid(token)) {
+                    return jwtUtils.getClaim(token, claims -> claims.get("userId", Long.class));
+                }
+            }
+            throw new RuntimeException("JWT token no existente o inválido");
+        } catch (Exception e) {
+            throw new RuntimeException("Error extrayendo el UserID del JWT: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/{productId}/ratings")
+    public ResponseEntity<List<ProductRating>> getProductRatings(@PathVariable Long productId) {
+        try {
+            List<ProductRating> ratings = productoService.getProductRatings(productId);
+            return new ResponseEntity<>(ratings, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

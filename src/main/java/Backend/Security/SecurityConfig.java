@@ -34,13 +34,18 @@ public class SecurityConfig {
                     auth.requestMatchers("/user/auth/login").permitAll();
                     auth.requestMatchers("/user/crud/register").permitAll();
                     auth.requestMatchers("/send-test-email").permitAll();
+
                     auth.requestMatchers(HttpMethod.GET,"/v1/**").permitAll();
 
-                    auth.requestMatchers("/v1/**").permitAll();
-
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-            
-                    auth.requestMatchers("/user/**").permitAll();
+
+                    auth.requestMatchers(HttpMethod.GET, "/user/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.POST, "/user/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.PUT, "/user/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.PUT, "/v1/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE, "/v1/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.POST, "/v1/**").hasRole("ADMIN");
 
                     auth.anyRequest().authenticated();
                 })
