@@ -1,16 +1,22 @@
 package Backend.Reservation;
 
+import Backend.Email.EmailService;
 import Backend.Producto.Producto;
 import Backend.Producto.ProductoRepository;
 import Backend.User.Crud.UserRepository;
 import Backend.exceptions.ProductNotFoundException;
 import Backend.exceptions.ReservationNotFoundException;
 import Backend.exceptions.UserNotFoundException;
+import jakarta.mail.MessagingException;
+import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,14 +31,35 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     public void createReservation(Reservation reservation) {
         if (hasOverlappingReservations(reservation)) {
             throw new RuntimeException("El producto ya está reservado para la fecha indicada.");
         }
         reservationRepository.save(reservation);
+        sendReservationConfirmationEmail(reservation);
     }
 
+    private void sendReservationConfirmationEmail(Reservation reservation) {
+        String userEmail = reservation.getUser().getUsername();
+        String productName = reservation.getProducto().getNombre();
+        Date startDate = reservation.getStartDate();
+        Date endDate = reservation.getEndDate();
+        double totalPrice = reservation.getTotalPrice();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd MMM yyyy", new Locale("es", "ES"));
+        String formattedStartDate = dateFormat.format(startDate);
+        String formattedEndDate = dateFormat.format(endDate);
+
+        try {
+            emailService.sendReservationConfirmationEmail(userEmail, productName, formattedStartDate, formattedEndDate, totalPrice);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public void updateReservation(Long id, Reservation reservation) {
         if (hasOverlappingReservations(reservation)) {
@@ -68,8 +95,11 @@ public class ReservationServiceImpl implements ReservationService {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException("Usuario no encontrado con id: " + userId);
         }
+
         List<Reservation> reservations = reservationRepository.findByUser_Id(userId);
+
         return reservations.stream()
+                .sorted(Comparator.comparing(Reservation::getStartDate))
                 .map(this::convertEntityToDTOWithProductDetails)
                 .collect(Collectors.toList());
     }
