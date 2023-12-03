@@ -24,11 +24,13 @@ public class JwtUtils {
 
 
     // Generar token de acceso
-    public String generateAccessToken(String username, Long userId, ERole role) {
+    public String generateAccessToken(String username, Long userId, ERole role, String FirstName, String LastName) {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("userId", userId)
                 .claim("role", role.name())
+                .claim("firstName", FirstName)
+                .claim("LastName", LastName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(timeExpiration)))
                 .signWith(getSignatureKey(), SignatureAlgorithm.HS256)

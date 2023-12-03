@@ -45,7 +45,11 @@ public class AuthenticationService implements IAuthenticationService {
 
             UserEntity user = getUser(authenticationRequest.getUsername());
 
-            return jwtUtils.generateAccessToken(authenticationRequest.getUsername(), user.getId(), user.getRole());
+            return jwtUtils.generateAccessToken(authenticationRequest.getUsername(),
+                    user.getId(),
+                    user.getRole(),
+                    user.getFirstName(),
+                    user.getLastName());
         } catch (AuthenticationException ex) {
             throw new BadRequestException("Error de autenticación");
         }
