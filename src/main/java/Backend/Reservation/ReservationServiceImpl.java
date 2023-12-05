@@ -13,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -46,13 +50,13 @@ public class ReservationServiceImpl implements ReservationService {
     private void sendReservationConfirmationEmail(Reservation reservation) {
         String userEmail = reservation.getUser().getUsername();
         String productName = reservation.getProducto().getNombre();
-        Date startDate = reservation.getStartDate();
-        Date endDate = reservation.getEndDate();
+        LocalDate startDate = reservation.getStartDate();
+        LocalDate endDate = reservation.getEndDate();
         double totalPrice = reservation.getTotalPrice();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd MMM yyyy", new Locale("es", "ES"));
-        String formattedStartDate = dateFormat.format(startDate);
-        String formattedEndDate = dateFormat.format(endDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE dd MMM yyyy", new Locale("es", "ES"));
+        String formattedStartDate = startDate.format(formatter);
+        String formattedEndDate = endDate.format(formatter);
 
         try {
             emailService.sendReservationConfirmationEmail(userEmail, productName, formattedStartDate, formattedEndDate, totalPrice);
@@ -60,6 +64,7 @@ public class ReservationServiceImpl implements ReservationService {
             e.printStackTrace();
         }
     }
+
     @Override
     public void updateReservation(Long id, Reservation reservation) {
         if (hasOverlappingReservations(reservation)) {
@@ -129,9 +134,9 @@ public class ReservationServiceImpl implements ReservationService {
 
         return new ReservationDTO(
                 reservation.getId(),
+                reservation.getProducto().getId(),
                 reservation.getStartDate(),
                 reservation.getEndDate(),
-                reservation.getProducto().getId(),
                 reservation.getProducto().getNombre(),
                 reservation.getUser().getId(),
                 reservation.getTotalPrice()
@@ -141,9 +146,9 @@ public class ReservationServiceImpl implements ReservationService {
     private ReservationDTO convertEntityToDTO(Reservation reservation) {
         return new ReservationDTO(
                 reservation.getId(),
+                reservation.getProducto().getId(),
                 reservation.getStartDate(),
                 reservation.getEndDate(),
-                reservation.getProducto().getId(),
                 reservation.getProducto().getNombre(),
                 reservation.getUser().getId(),
                 reservation.getTotalPrice()
@@ -151,7 +156,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<Reservation> getOverlappingReservations(Long productId, Date startDate, Date endDate) {
+    public List<Reservation> getOverlappingReservations(Long productId, LocalDate startDate, LocalDate endDate) {
         return reservationRepository.findOverlappingReservations(productId, startDate, endDate);
     }
 
