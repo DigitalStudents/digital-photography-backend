@@ -66,7 +66,14 @@ public class ProductoServiceImpl implements ProductoService {
         }
 
         Producto producto = optionalProducto.get();
-        awsS3Service.uploadImagesToS3(imageFiles);
+
+        // Upload images to S3 and get image URLs
+        List<String> imageUrls = awsS3Service.uploadImagesToS3(imageFiles);
+
+        // Update the imagenes attribute with the new image URLs
+        producto.setImagenes(imageUrls);
+
+        // Save the updated product
         productoRepository.save(producto);
     }
 
