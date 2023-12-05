@@ -87,13 +87,13 @@ public class Producto{
     @Value("${mySecretKey}")
     private static String secretKey;
 
-    private static final BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey,secretKey);
-    private static final AmazonS3 S3_CLIENT = AmazonS3ClientBuilder.standard()
-            .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-            .withRegion(Regions.US_EAST_2)
-            .build();
 
     public void uploadImagesToS3(List<MultipartFile> imageFiles) throws IOException {
+        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey,secretKey);
+        AmazonS3 S3_CLIENT = AmazonS3ClientBuilder.standard()
+                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+                .withRegion(Regions.US_EAST_2)
+                .build();
         for (MultipartFile imageFile : imageFiles) {
             String uniqueImageName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
             ObjectMetadata metadata = new ObjectMetadata();
