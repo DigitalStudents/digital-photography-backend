@@ -38,14 +38,16 @@ public class UserService implements IUserService {
 
     @Override
     public String register(UserEntityDTO userEntityDTO) throws MessagingException {
-        createIfNotExist(userEntityDTO);
-        return "Se ha enviado un correo de verificación a su Email. Por favor verifique su bandeja de entrada";
+        Map<String, Object> result = createIfNotExist(userEntityDTO);
+        String verificationToken = (String) result.get("verificationToken");
+        return "Se ha enviado un correo de verificación a su Email. Por favor verifique su bandeja de entrada." + " Token a verificar: " + verificationToken;
     }
 
 
     @Override
     public UserEntityDTO create(UserEntityDTO userEntityDTO) throws MessagingException {
-        return createIfNotExist(userEntityDTO);
+        Map<String, Object> result = createIfNotExist(userEntityDTO);
+        return (UserEntityDTO) result.get("userEntityDTO");
     }
 
 
@@ -120,7 +122,7 @@ public class UserService implements IUserService {
         return "Roles Actualizados";
     }
 
-    private UserEntityDTO createIfNotExist(UserEntityDTO userEntityDTO) throws MessagingException {
+    private Map<String, Object> createIfNotExist(UserEntityDTO userEntityDTO) throws MessagingException {
         Optional<UserEntity> existingUser = userRepository.findByUsername(userEntityDTO.getUsername());
 
         if (existingUser.isPresent()) {
@@ -140,10 +142,13 @@ public class UserService implements IUserService {
 
         userRepository.save(userEntity);
 
-        String verificationLink = "http://localhost:8080/user/auth/verify?token=" + verificationToken;
+        String verificationLink = "http://34.230.52.4:8080/user/auth/verify?token=" + verificationToken;
         emailService.sendVerificationEmail(userEntityDTO.getUsername(), verificationLink);
 
-        return userEntityDTO;
+        Map<String, Object> result = new HashMap<>();
+        result.put("userEntityDTO", userEntityDTO);
+        result.put("verificationToken", verificationToken);
+        return result;
     }
 
     public boolean verifyAccount(String verificationToken) {
