@@ -19,7 +19,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
@@ -83,12 +85,14 @@ public class Producto{
     private static final String S3_BUCKET_NAME ="1023c04-grupo4";
 
     @Value("${myAccessKey}")
-    private static String accessKey;
+    private static String TaccessKey;
+
     @Value("${mySecretKey}")
-    private static String secretKey;
+    private static String TsecretKey;
 
 
-    public void uploadImagesToS3(List<MultipartFile> imageFiles) throws IOException {
+    public void uploadImagesToS3(List<MultipartFile> imageFiles, String accessKey, String secretKey) throws IOException {
+        System.out.println("TEST, "+TaccessKey);
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey,secretKey);
         AmazonS3 S3_CLIENT = AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))

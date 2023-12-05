@@ -42,12 +42,14 @@ public class ProductoController {
             @RequestParam(value = "caracteristicaIds", required = false) List<Long> caracteristicaIds,
             @RequestParam(value = "categoriaIds", required = false) List<Long> categoriaIds
     ) {
+        /*
         if (images != null && !images.isEmpty()) {
             try {
                 producto.uploadImagesToS3(images);
             } catch (IOException ignored) {
             }
         }
+        */
 
         productoService.CrearProducto(producto);
 

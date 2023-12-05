@@ -14,6 +14,7 @@ import Backend.exceptions.ProductNotFoundException;
 import Backend.exceptions.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +45,12 @@ public class ProductoServiceImpl implements ProductoService {
     @Autowired
     private UserRepository userRepository;
 
+    @Value("${myAccessKey}")
+    private String accessKey;
+
+    @Value("${mySecretKey}")
+    private String secretKey;
+
 
     @Override
     public void CrearProducto(Producto producto) {
@@ -62,7 +69,7 @@ public class ProductoServiceImpl implements ProductoService {
         }
 
         Producto producto = optionalProducto.get();
-        producto.uploadImagesToS3(imageFiles);
+        producto.uploadImagesToS3(imageFiles, accessKey, secretKey);
         productoRepository.save(producto);
     }
 
