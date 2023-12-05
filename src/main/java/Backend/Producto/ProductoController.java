@@ -42,14 +42,14 @@ public class ProductoController {
             @RequestParam(value = "caracteristicaIds", required = false) List<Long> caracteristicaIds,
             @RequestParam(value = "categoriaIds", required = false) List<Long> categoriaIds
     ) {
-        /*
         if (images != null && !images.isEmpty()) {
             try {
-                producto.uploadImagesToS3(images);
+
+                productoService.uploadImages(producto.getId(), images);
             } catch (IOException ignored) {
+
             }
         }
-        */
 
         productoService.CrearProducto(producto);
 
@@ -62,7 +62,7 @@ public class ProductoController {
         }
     }
 
-    @Operation(summary = "Sube una imagen al bucket s3 (USAR POSTMAN)")
+    @Operation(summary = "Sube una imagen al bucket s3 asociándolo a un producto (USAR POSTMAN)")
     @PostMapping("/{id}/subir-imagen")
     public void uploadImage(@PathVariable Long id,
                             @RequestParam("image") MultipartFile image) throws IOException {

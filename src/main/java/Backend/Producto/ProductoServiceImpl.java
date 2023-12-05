@@ -1,6 +1,7 @@
 package Backend.Producto;
 
 
+import Backend.AWSS3Service;
 import Backend.Caracteristicas.Caracteristica;
 import Backend.Caracteristicas.CaracteristicaRepository;
 import Backend.Categorias.Categoria;
@@ -45,12 +46,8 @@ public class ProductoServiceImpl implements ProductoService {
     @Autowired
     private UserRepository userRepository;
 
-    @Value("${myAccessKey}")
-    private String accessKey;
-
-    @Value("${mySecretKey}")
-    private String secretKey;
-
+    @Autowired
+    private AWSS3Service awsS3Service;
 
     @Override
     public void CrearProducto(Producto producto) {
@@ -69,7 +66,7 @@ public class ProductoServiceImpl implements ProductoService {
         }
 
         Producto producto = optionalProducto.get();
-        producto.uploadImagesToS3(imageFiles, accessKey, secretKey);
+        awsS3Service.uploadImagesToS3(imageFiles);
         productoRepository.save(producto);
     }
 
@@ -170,7 +167,6 @@ public class ProductoServiceImpl implements ProductoService {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
 
-        // Check if the user has already rated the product
         if (productRatingRepository.existsByProductAndUser(product, user)) {
             throw new ConflictException("Ya has valorado este producto.");
         }

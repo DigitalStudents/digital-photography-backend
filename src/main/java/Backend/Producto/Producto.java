@@ -81,56 +81,6 @@ public class Producto{
     private List<ProductRating> ratings = new ArrayList<>();
 
     private boolean deleted = false;
-
-    private static final String S3_BUCKET_NAME ="1023c04-grupo4";
-
-    @Value("${myAccessKey}")
-    private static String TaccessKey;
-
-    @Value("${mySecretKey}")
-    private static String TsecretKey;
-
-
-    public void uploadImagesToS3(List<MultipartFile> imageFiles, String accessKey, String secretKey) throws IOException {
-        System.out.println("TEST, "+TaccessKey);
-        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey,secretKey);
-        AmazonS3 S3_CLIENT = AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-                .withRegion(Regions.US_EAST_2)
-                .build();
-        for (MultipartFile imageFile : imageFiles) {
-            String uniqueImageName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentLength(imageFile.getSize());
-
-            String contentType = getContentTypeByFileExtension(imageFile.getOriginalFilename());
-            metadata.setContentType(contentType);
-
-            S3_CLIENT.putObject(S3_BUCKET_NAME, uniqueImageName, new ByteArrayInputStream(imageFile.getBytes()), metadata);
-
-            String imageUrl = generateS3ImageUrl(uniqueImageName);
-
-            imagenes.add(imageUrl);
-        }
-    }
-
-    private String generateS3ImageUrl(String imageName) {
-        return "https://" + S3_BUCKET_NAME + ".s3.amazonaws.com/" + imageName;
-    }
-
-
-    private String getContentTypeByFileExtension(String filename) {
-        if (filename.endsWith(".jpg") || filename.endsWith(".jpeg")) {
-            return "image/jpeg";
-        } else if (filename.endsWith(".png")) {
-            return "image/png";
-        } else if (filename.endsWith(".gif")) {
-            return "image/gif";
-        } else {
-            return "application/octet-stream";
-        }
-    }
-
     @JsonIgnore
     public void softDelete() {
         this.deleted = true;
