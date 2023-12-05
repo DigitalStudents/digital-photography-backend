@@ -7,6 +7,8 @@ import Backend.Inventory.Inventory;
 import Backend.ProductRating.ProductRating;
 import Backend.Reservation.Reservation;
 import Backend.User.Model.UserEntity;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
@@ -17,6 +19,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
@@ -78,8 +81,15 @@ public class Producto{
     private boolean deleted = false;
 
     private static final String S3_BUCKET_NAME ="1023c04-grupo4";
+
+    @Value("${myAccessKey}")
+    private static String accessKey;
+    @Value("${mySecretKey}")
+    private static String secretKey;
+
+    private static final BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey,secretKey);
     private static final AmazonS3 S3_CLIENT = AmazonS3ClientBuilder.standard()
-            .withCredentials(new DefaultAWSCredentialsProviderChain())
+            .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
             .withRegion(Regions.US_EAST_2)
             .build();
 
