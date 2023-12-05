@@ -41,7 +41,7 @@ jobs:
         - name: Delete Old docker container
           run: sudo docker rm -f digital-photography-backend-container || true
         - name: Delete Old images
-          run: docker rmi -f $(sudo docker images -aq)
+          run: sudo docker rmi -f $(sudo docker images -aq)
         - name: Run Docker Container
           run: sudo docker run -d -p 8080:8080 --name digital-photography-backend-container nicolaspineda255/digital-photography-backend
 
