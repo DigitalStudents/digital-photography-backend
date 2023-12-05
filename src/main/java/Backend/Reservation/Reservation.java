@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Data
@@ -33,24 +36,20 @@ public class Reservation {
     @JsonIgnore
     private UserEntity user;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Argentina/Buenos_Aires")
     @Column(name = "start_date")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date startDate;
+    private LocalDate startDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Argentina/Buenos_Aires")
     @Column(name = "end_date")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date endDate;
+    private LocalDate endDate;
 
     @Column(name = "total_price")
     private double totalPrice;
 
 
     public double calculateTotalPrice() {
-        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());
-        long diffInDays = diffInMillies / (24 * 60 * 60 * 1000);
-
+        long diffInDays = ChronoUnit.DAYS.between(startDate, endDate);
         double precio = producto.getPrecio();
 
         return diffInDays * precio;

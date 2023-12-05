@@ -20,7 +20,6 @@ public class CategoriaServiceImpl implements CategoriaService{
     @Override
     public void CrearCategoria(Categoria categoria) {
         categoriaRepository.save(categoria);
-
     }
 
     @Override
