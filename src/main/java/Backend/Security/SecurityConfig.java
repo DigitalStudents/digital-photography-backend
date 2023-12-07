@@ -35,6 +35,9 @@ public class SecurityConfig {
                     auth.requestMatchers("/user/crud/register").permitAll();
                     auth.requestMatchers("/send-test-email").permitAll();
 
+                    auth.requestMatchers(HttpMethod.POST, "/user/crud/agregarFavorito/**").hasAnyRole("USER", "ADMIN");
+                    auth.requestMatchers(HttpMethod.POST, "/user/crud/removerFavorito/**").hasAnyRole("USER", "ADMIN");
+
                     auth.requestMatchers(HttpMethod.GET,"/v1/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST, "/v1/reservations").hasRole("USER");
 
@@ -49,6 +52,8 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.PUT, "/v1/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.DELETE, "/v1/**").hasRole("ADMIN");
                     auth.requestMatchers(HttpMethod.POST, "/v1/**").hasRole("ADMIN");
+
+
 
                     auth.anyRequest().authenticated();
                 })
