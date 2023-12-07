@@ -14,6 +14,9 @@ import Backend.exceptions.ConflictException;
 import Backend.exceptions.ProductNotFoundException;
 import Backend.exceptions.UserNotFoundException;
 import jakarta.transaction.Transactional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -49,6 +52,8 @@ public class ProductoServiceImpl implements ProductoService {
     @Autowired
     private AWSS3Service awsS3Service;
 
+    private static final Logger logger = LogManager.getLogger(ProductoServiceImpl.class);
+
     @Override
     public void CrearProducto(Producto producto) {
         if (productoRepository.findByNombreIgnoreCase(producto.getNombre()).isPresent()) {
@@ -67,16 +72,21 @@ public class ProductoServiceImpl implements ProductoService {
 
         Producto producto = optionalProducto.get();
 
+        try {
+            List<String> imageUrls = awsS3Service.uploadImagesToS3(imageFiles);
 
-        List<String> imageUrls = awsS3Service.uploadImagesToS3(imageFiles);
+            logger.info("Received image URLs: {}", Arrays.toString(imageUrls.toArray()));
 
+            producto.setImagenes(imageUrls);
 
-        producto.setImagenes(imageUrls);
+            productoRepository.save(producto);
 
-
-        productoRepository.save(producto);
+            logger.info("Images associated with Producto (ID: {}) uploaded successfully.", productId);
+        } catch (IOException e) {
+            logger.error("Error uploading images for Producto (ID: {}): {}", productId, e.getMessage(), e);
+            throw e;
+        }
     }
-
     @Override
     public Optional<Producto> BuscarProducto(Long id) {
         return productoRepository.findById(id);

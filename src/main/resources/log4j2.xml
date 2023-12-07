@@ -9,14 +9,14 @@
         </Console>
 
         <!-- Rolling file appender, writes logs to a rolling file -->
-<!--        <RollingFile name="RollingFile" fileName="./logs/system.log" filePattern="./logs/$${date:yyyy-MM}/spring-boot-logger-log4j2-%d{-dd-MMMM-yyyy}-%i.log.gz">-->
-<!--            <PatternLayout pattern="%d %p %C{1.} [%t] %m%n"/>-->
-<!--            &lt;!&ndash; Define log rolling policy based on file size &ndash;&gt;-->
-<!--            <Policies>-->
-<!--                <SizeBasedTriggeringPolicy size="10 MB"/>-->
-<!--            </Policies>-->
-<!--            <DefaultRolloverStrategy max="5" />-->
-<!--        </RollingFile>-->
+        <RollingFile name="RollingFile" fileName="./logs/system.log" filePattern="./logs/$${date:yyyy-MM}/spring-boot-logger-log4j2-%d{-dd-MMMM-yyyy}-%i.log.gz">
+            <PatternLayout pattern="%d %p %C{1.} [%t] %m%n"/>
+            <!-- Define log rolling policy based on file size -->
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="5" />
+        </RollingFile>
     </Appenders>
 
     <!-- Configure loggers -->
@@ -26,13 +26,13 @@
             <!-- Attach the console appender to the root logger for all log levels -->
             <AppenderRef ref="Console" level="info"/>
             <!-- Attach the file appender to the root logger for ERROR level and above -->
-<!--            <AppenderRef ref="RollingFile" level="warn"/>-->
+            <AppenderRef ref="RollingFile" level="warn"/>
         </Root>
 
         <!-- Specific logger for "com.mytest.project*" at TRACE level -->
-<!--        <Logger name="com.mytest.project" level="trace">-->
-<!--            &lt;!&ndash; Attach the file appender to this specific logger &ndash;&gt;-->
-<!--            <AppenderRef ref="RollingFile"/>-->
-<!--        </Logger>-->
+        <Logger name="com.mytest.project" level="trace">
+            <!-- Attach the file appender to this specific logger -->
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
     </Loggers>
 </Configuration>
