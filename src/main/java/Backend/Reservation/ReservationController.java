@@ -22,6 +22,7 @@ import io.jsonwebtoken.Claims;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -75,8 +76,8 @@ public class ReservationController {
             Reservation reservation = new Reservation();
             reservation.setProducto(producto);
             reservation.setUser(userEntity);
-            reservation.setStartDate(parseDateString(startDate));
-            reservation.setEndDate(parseDateString(endDate));
+            reservation.setStartDate(parseDateString(startDate, startHour));
+            reservation.setEndDate(parseDateString(endDate, endHour));
 
             double totalPrice = reservation.calculateTotalPrice();
             reservation.setTotalPrice(totalPrice);
@@ -94,9 +95,9 @@ public class ReservationController {
         }
     }
 
-    private LocalDate parseDateString(String dateString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return LocalDate.parse(dateString, formatter);
+    private LocalDateTime parseDateString(String dateString, Integer hour) {
+        LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        return date.atTime(hour, 0);
     }
 
     private String getUsernameFromToken(String tokenHeader) {

@@ -39,7 +39,7 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.POST, "/user/crud/removerFavorito/**").hasAnyRole("USER", "ADMIN");
 
                     auth.requestMatchers(HttpMethod.GET,"/v1/**").permitAll();
-                    auth.requestMatchers(HttpMethod.POST, "/v1/reservations").hasRole("USER");
+                    auth.requestMatchers(HttpMethod.POST, "/v1/reservations").hasAnyRole("USER", "ADMIN");
 
 
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();

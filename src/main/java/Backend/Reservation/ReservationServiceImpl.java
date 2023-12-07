@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -50,11 +51,11 @@ public class ReservationServiceImpl implements ReservationService {
     private void sendReservationConfirmationEmail(Reservation reservation) {
         String userEmail = reservation.getUser().getUsername();
         String productName = reservation.getProducto().getNombre();
-        LocalDate startDate = reservation.getStartDate();
-        LocalDate endDate = reservation.getEndDate();
+        LocalDateTime startDate = reservation.getStartDate();
+        LocalDateTime endDate = reservation.getEndDate();
         double totalPrice = reservation.getTotalPrice();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE dd MMM yyyy", new Locale("es", "ES"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE yyyy-MM-dd HH", new Locale("es", "ES"));
         String formattedStartDate = startDate.format(formatter);
         String formattedEndDate = endDate.format(formatter);
 
@@ -156,7 +157,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<Reservation> getOverlappingReservations(Long productId, LocalDate startDate, LocalDate endDate) {
+    public List<Reservation> getOverlappingReservations(Long productId, LocalDateTime startDate, LocalDateTime endDate) {
         return reservationRepository.findOverlappingReservations(productId, startDate, endDate);
     }
 

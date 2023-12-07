@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -36,13 +37,13 @@ public class Reservation {
     @JsonIgnore
     private UserEntity user;
 
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Argentina/Buenos_Aires")
+    @JsonFormat(pattern = "yyyy-MM-dd HH", timezone = "America/Argentina/Buenos_Aires")
     @Column(name = "start_date")
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Argentina/Buenos_Aires")
+    @JsonFormat(pattern = "yyyy-MM-dd HH", timezone = "America/Argentina/Buenos_Aires")
     @Column(name = "end_date")
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @Column(name = "total_price")
     private double totalPrice;
