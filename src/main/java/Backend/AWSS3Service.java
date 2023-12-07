@@ -44,9 +44,13 @@ public class AWSS3Service {
                     .withRegion(Regions.US_EAST_2)
                     .build();
 
+            logger.info("Received {} images for processing.", imageFiles.size());
+
             for (MultipartFile imageFile : imageFiles) {
                 try {
                     String uniqueImageName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+                    logger.info("Unique Image Name: {}", uniqueImageName);
+
                     ObjectMetadata metadata = new ObjectMetadata();
                     metadata.setContentLength(imageFile.getSize());
 
@@ -70,6 +74,7 @@ public class AWSS3Service {
 
         return imageUrls;
     }
+
 
     private String generateS3ImageUrl(String imageName) {
         return "https://" + bucketName + ".s3.amazonaws.com/" + imageName;

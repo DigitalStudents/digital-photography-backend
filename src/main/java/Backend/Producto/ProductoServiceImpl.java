@@ -73,20 +73,24 @@ public class ProductoServiceImpl implements ProductoService {
         Producto producto = optionalProducto.get();
 
         try {
-            List<String> imageUrls = awsS3Service.uploadImagesToS3(imageFiles);
+            List<String> newImageUrls = awsS3Service.uploadImagesToS3(imageFiles);
 
-            logger.info("Received image URLs: {}", Arrays.toString(imageUrls.toArray()));
+            logger.info("Received new image URLs: {}", Arrays.toString(newImageUrls.toArray()));
 
-            producto.setImagenes(imageUrls);
+            List<String> existingImageUrls = producto.getImagenes();
+            existingImageUrls.addAll(newImageUrls);
+
+            producto.setImagenes(existingImageUrls);
 
             productoRepository.save(producto);
 
-            logger.info("Images associated with Producto (ID: {}) uploaded successfully.", productId);
+            logger.info("New images associated with Producto (ID: {}) uploaded successfully.", productId);
         } catch (IOException e) {
-            logger.error("Error uploading images for Producto (ID: {}): {}", productId, e.getMessage(), e);
+            logger.error("Error uploading new images for Producto (ID: {}): {}", productId, e.getMessage(), e);
             throw e;
         }
     }
+
     @Override
     public Optional<Producto> BuscarProducto(Long id) {
         return productoRepository.findById(id);
