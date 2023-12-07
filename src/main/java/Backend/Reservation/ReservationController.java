@@ -52,18 +52,14 @@ public class ReservationController {
     @PostMapping
     @Operation(summary = "Crea una Reserva")
     public ResponseEntity<String> createReservation(
-            @RequestParam Long productId,
-            @RequestParam String startDate,
-            @RequestParam String endDate,
-            @RequestParam(required = false) Integer startHour,
-            @RequestParam(required = false) Integer endHour,
+            @RequestBody CreateReservationRequestDTO requestDTO,
             HttpServletRequest request) {
 
         try {
             String username = getUsernameFromToken(request.getHeader("Authorization"));
 
-            Producto producto = productoRepository.findById(productId)
-                    .orElseThrow(() -> new ProductNotFoundException("Producto no encontrado con id: " + productId));
+            Producto producto = productoRepository.findById(requestDTO.getProductId())
+                    .orElseThrow(() -> new ProductNotFoundException("Producto no encontrado con id: " + requestDTO.getProductId()));
 
             UserEntity userEntity = userRepository.findByUsername(username)
                     .orElseGet(() -> {
@@ -76,8 +72,8 @@ public class ReservationController {
             Reservation reservation = new Reservation();
             reservation.setProducto(producto);
             reservation.setUser(userEntity);
-            reservation.setStartDate(parseDateString(startDate, startHour));
-            reservation.setEndDate(parseDateString(endDate, endHour));
+            reservation.setStartDate(parseDateString(requestDTO.getStartDate(), requestDTO.getStartHour()));
+            reservation.setEndDate(parseDateString(requestDTO.getEndDate(), requestDTO.getEndHour()));
 
             double totalPrice = reservation.calculateTotalPrice();
             reservation.setTotalPrice(totalPrice);
