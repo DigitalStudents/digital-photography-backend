@@ -24,6 +24,7 @@ public class CaracteristicaServiceImpl implements CaracteristicaService {
         caracteristicaRepository.save(caracteristica);
     }
 
+
     @Override
     public Optional<Caracteristica> BuscarCaracteristica(Long id) {
         return caracteristicaRepository.findById(id);

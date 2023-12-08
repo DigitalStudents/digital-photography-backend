@@ -48,7 +48,7 @@ public class ProductoServiceTest {
 
     @Test
     public void testBuscarProducto() {
-        Long id = 1L;
+        Long id = 500L;
         Producto producto = new Producto();
         when(productoRepository.findById(id)).thenReturn(Optional.of(producto));
 

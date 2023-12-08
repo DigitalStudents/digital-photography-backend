@@ -156,11 +156,12 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     private boolean hasOverlappingReservations(Reservation reservation) {
-        List<Reservation> overlappingReservations = getOverlappingReservations(
-                reservation.getProducto().getId(),
-                reservation.getStartDate(),
-                reservation.getEndDate()
-        );
+        Long idProducto=reservation.getProducto().getId();
+        Date startDate= reservation.getStartDate();
+        Date endDate = reservation.getEndDate();
+
+        List<Reservation> overlappingReservations =
+                getOverlappingReservations(idProducto, startDate,endDate);
         return !overlappingReservations.isEmpty();
     }
 
