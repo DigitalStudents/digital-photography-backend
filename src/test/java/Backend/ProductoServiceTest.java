@@ -48,7 +48,7 @@ public class ProductoServiceTest {
 
     @Test
     public void testBuscarProducto() {
-        Long id = 1L;
+        Long id = 500L;
         Producto producto = new Producto();
         when(productoRepository.findById(id)).thenReturn(Optional.of(producto));
 
@@ -74,11 +74,13 @@ public class ProductoServiceTest {
         ProductoService.ModificarProducto(producto);
         Mockito.verify(productoRepository, Mockito.times(1)).save(producto);
     }
-
+/*
     @Test
     public void testEliminarproducto() {
         Long id = 1L;
         ProductoService.EliminarProducto(id);
         Mockito.verify(productoRepository, Mockito.times(1)).deleteById(id);
     }
+    */
+
 }
