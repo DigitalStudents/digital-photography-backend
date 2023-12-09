@@ -72,8 +72,8 @@ public class ReservationController {
             Reservation reservation = new Reservation();
             reservation.setProducto(producto);
             reservation.setUser(userEntity);
-            reservation.setStartDate(parseDateString(requestDTO.getStartDate(), requestDTO.getStartHour()));
-            reservation.setEndDate(parseDateString(requestDTO.getEndDate(), requestDTO.getEndHour()));
+            reservation.setStartDate(parseDateString(requestDTO.getStartDate()));
+            reservation.setEndDate(parseDateString(requestDTO.getEndDate()));
 
             double totalPrice = reservation.calculateTotalPrice();
             reservation.setTotalPrice(totalPrice);
@@ -91,9 +91,8 @@ public class ReservationController {
         }
     }
 
-    private LocalDateTime parseDateString(String dateString, Integer hour) {
-        LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        return date.atTime(hour, 0);
+    private LocalDateTime parseDateString(String dateString) {
+        return LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
 
     private String getUsernameFromToken(String tokenHeader) {

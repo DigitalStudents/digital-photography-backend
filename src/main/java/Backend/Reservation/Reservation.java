@@ -37,11 +37,11 @@ public class Reservation {
     @JsonIgnore
     private UserEntity user;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH", timezone = "America/Argentina/Buenos_Aires")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "America/Argentina/Buenos_Aires")
     @Column(name = "start_date")
     private LocalDateTime startDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH", timezone = "America/Argentina/Buenos_Aires")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "America/Argentina/Buenos_Aires")
     @Column(name = "end_date")
     private LocalDateTime endDate;
 
