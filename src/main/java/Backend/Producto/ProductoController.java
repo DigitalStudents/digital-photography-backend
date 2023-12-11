@@ -226,4 +226,17 @@ public class ProductoController {
         }
     }
 
+    @GetMapping("/{productId}/promedioRating")
+    @Operation(summary = "Obtiene el promedio de calificación de un producto")
+    public ResponseEntity<Double> getAverageRating(@PathVariable Long productId) {
+        try {
+            double averageRating = productoService.getAverageRating(productId);
+            return ResponseEntity.ok(averageRating);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }
