@@ -1,6 +1,7 @@
 package Backend.Producto;
 
 import Backend.ProductRating.ProductRating;
+import Backend.ProductRating.ProductRatingDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,7 @@ public interface ProductoService {
 
      void addRating(Long productId, Long userId, int rating, String comment);
      double getAverageRating(Long productId);
-     List<ProductRating> getProductRatings(Long productId);
+     List<ProductRatingDTO> getProductRatings(Long productId);
+
 
 }

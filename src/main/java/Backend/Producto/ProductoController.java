@@ -1,6 +1,7 @@
 package Backend.Producto;
 
 import Backend.ProductRating.ProductRating;
+import Backend.ProductRating.ProductRatingDTO;
 import Backend.Reservation.ReservationService;
 import Backend.Security.JwtUtils;
 import Backend.exceptions.ProductNotFoundException;
@@ -214,9 +215,9 @@ public class ProductoController {
     }
 
     @GetMapping("/{productId}/ratings")
-    public ResponseEntity<List<ProductRating>> getProductRatings(@PathVariable Long productId) {
+    public ResponseEntity<List<ProductRatingDTO>> getProductRatings(@PathVariable Long productId) {
         try {
-            List<ProductRating> ratings = productoService.getProductRatings(productId);
+            List<ProductRatingDTO> ratings = productoService.getProductRatings(productId);
             return new ResponseEntity<>(ratings, HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

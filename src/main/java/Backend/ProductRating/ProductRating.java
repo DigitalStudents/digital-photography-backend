@@ -40,4 +40,17 @@ public class ProductRating {
 
     private LocalDateTime date;
 
+    @Transient
+    private String userFirstName;
+
+    @Transient
+    private String userLastName;
+
+    public String getUserFirstName() {
+        return user != null ? user.getFirstName() : null;
+    }
+
+    public String getUserLastName() {
+        return user != null ? user.getLastName() : null;
+    }
 }

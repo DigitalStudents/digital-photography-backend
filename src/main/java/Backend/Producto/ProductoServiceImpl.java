@@ -7,6 +7,7 @@ import Backend.Caracteristicas.CaracteristicaRepository;
 import Backend.Categorias.Categoria;
 import Backend.Categorias.CategoriaRepository;
 import Backend.ProductRating.ProductRating;
+import Backend.ProductRating.ProductRatingDTO;
 import Backend.ProductRating.ProductRatingRepository;
 import Backend.User.Crud.UserRepository;
 import Backend.User.Model.UserEntity;
@@ -28,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductoServiceImpl implements ProductoService {
@@ -215,8 +217,12 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public List<ProductRating> getProductRatings(Long productId) {
-        return productRatingRepository.findByProduct_Id(productId);
+    public List<ProductRatingDTO> getProductRatings(Long productId) {
+        List<ProductRating> ratings = productRatingRepository.findByProduct_Id(productId);
+
+        return ratings.stream()
+                .map(ProductRatingDTO::new)
+                .collect(Collectors.toList());
     }
 
 }
